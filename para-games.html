@@ -7,7 +7,7 @@
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="styles.css?v=20260827-7">
-  <link rel="stylesheet" href="para-games.css?v=20260827-8">
+  <link rel="stylesheet" href="para-games.css?v=20260828-9">
   <link rel="stylesheet" href="help-chatbot.css?v=20260827-2">
 </head>
 <body class="para-games-page">
@@ -120,10 +120,11 @@
             <span>종목·경기장·장애 유형</span>
             <div><i class="bi bi-search" aria-hidden="true"></i><input id="gamesScheduleSearch" type="search" autocomplete="off" placeholder="예: 수영, 한라체육관, 시각"></div>
           </label>
-          <label for="gamesScheduleDate"><span>경기일</span><select id="gamesScheduleDate"><option value="all">전체 날짜</option><option value="pre_event">사전경기</option><option value="2026-09-11">9월 11일</option><option value="2026-09-12">9월 12일</option><option value="2026-09-13">9월 13일</option><option value="2026-09-14">9월 14일</option><option value="2026-09-15">9월 15일</option><option value="2026-09-16">9월 16일</option></select></label>
           <label for="gamesScheduleScope"><span>지역</span><select id="gamesScheduleScope"><option value="all">전체 지역</option><option value="jeju">제주 경기장</option><option value="off_island">타 시도 경기장</option></select></label>
         </div>
         <p class="games-plan-note"><i class="bi bi-exclamation-circle" aria-hidden="true"></i> 참가요강의 경기일정(안) 기준입니다. 공식연습·검사 일정도 함께 표시하며, 변경 공지가 있으면 종목단체 공지가 우선합니다.</p>
+        <!-- 달력에서 선택한 날짜가 바뀔 때 스크린리더에 알리는 고정 영역(다시 그려도 사라지지 않게 결과 밖에 둔다) -->
+        <p class="games-sr-only" id="gamesScheduleLive" role="status" aria-live="polite"></p>
         <div class="games-schedule-results" id="gamesScheduleResults">
           <p class="games-loading">전체 경기 일정을 불러오고 있습니다.</p>
         </div>
@@ -209,7 +210,7 @@
     </div>
   </nav>
 
-  <script src="para-games.js?v=20260827-6"></script>
+  <script src="para-games.js?v=20260828-7"></script>
   <script src="help-chatbot.js?v=20260726-1"></script>
 </body>
 </html>

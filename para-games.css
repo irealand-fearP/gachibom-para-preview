@@ -472,7 +472,7 @@
 
 .games-schedule-controls {
   display: grid;
-  grid-template-columns: minmax(300px, 1.6fr) repeat(2, minmax(160px, 0.7fr));
+  grid-template-columns: minmax(300px, 2.2fr) minmax(160px, 0.7fr);
   gap: 10px;
 }
 
@@ -574,19 +574,20 @@
   box-shadow: 0 0 0 3px rgba(0, 62, 199, 0.12);
 }
 
+/* 달력 개편: 좌측 종목 리스트 카드 + 우측 달력 카드 2단 */
 .games-schedule-browser {
   display: grid;
-  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-  border: 1px solid #dfe4eb;
-  border-radius: 16px;
-  background: #fff;
-  overflow: hidden;
+  grid-template-columns: minmax(220px, 296px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
 }
 
 .games-sport-index {
   min-width: 0;
-  border-right: 1px solid #dfe4eb;
-  background: #f6f8fb;
+  border: 1px solid #dfe4eb;
+  border-radius: 16px;
+  background: #fff;
+  overflow: hidden;
 }
 
 .games-sport-index-head {
@@ -606,7 +607,7 @@
 }
 
 .games-sport-index-list {
-  max-height: 520px;
+  max-height: 660px;
   padding: 8px;
   overflow-y: auto;
   scrollbar-gutter: stable;
@@ -778,6 +779,321 @@
   font-size: 12px;
   font-weight: 700;
   text-decoration: none;
+  white-space: nowrap;
+}
+
+/* ── 월 달력 ─────────────────────────────────────────────────────────── */
+.games-calendar-pane {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.games-calendar-panel {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid #dfe4eb;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(13, 18, 32, 0.06);
+}
+
+.games-calendar-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.games-calendar-nav {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #cfd6e0;
+  border-radius: 10px;
+  background: #fff;
+  color: #48525f;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.games-calendar-nav:hover:not(:disabled) {
+  background: #eef2ff;
+  border-color: #003ec7;
+  color: #003ec7;
+}
+
+.games-calendar-nav:focus-visible {
+  outline: 3px solid #003ec7;
+  outline-offset: 2px;
+}
+
+.games-calendar-nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.games-calendar-title {
+  margin: 0;
+  color: #111318;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.games-calendar-pre {
+  margin-left: auto;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid #b6e5dd;
+  border-radius: 999px;
+  background: #e1f7f3;
+  color: #0b6c64;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.games-calendar-pre:hover {
+  background: #cdf0ea;
+}
+
+.games-calendar-pre:focus-visible {
+  outline: 3px solid #003ec7;
+  outline-offset: 2px;
+}
+
+.games-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.games-calendar-weekdays span {
+  color: #596271;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.games-calendar-weekdays .is-sunday,
+.games-cal-cell.is-sunday .games-cal-day {
+  color: #c0392b;
+}
+
+.games-calendar-weekdays .is-saturday,
+.games-cal-cell.is-saturday .games-cal-day {
+  color: #0059a6;
+}
+
+.games-calendar-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.games-cal-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.games-cal-cell {
+  min-width: 0;
+  min-height: 148px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 7px 8px;
+  border: 1px solid #eef0f2;
+  border-radius: 11px;
+  background: #fafbfc;
+  font: inherit;
+  text-align: left;
+  overflow: hidden;
+}
+
+.games-cal-cell.is-pad {
+  border: 0;
+  background: transparent;
+}
+
+.games-cal-cell.is-active {
+  border-color: #dfe4ee;
+  background: #fff;
+  cursor: pointer;
+}
+
+.games-cal-cell.is-active:hover {
+  border-color: #003ec7;
+  background: #f7f9ff;
+}
+
+.games-cal-cell.is-active:focus-visible {
+  outline: 3px solid #003ec7;
+  outline-offset: 2px;
+}
+
+.games-cal-cell.is-selected {
+  border: 2px solid #003ec7;
+  box-shadow: 0 0 0 3px #dde1ff;
+}
+
+/* 좌측에서 고른 종목의 경기일 표시(양방향 연동) */
+.games-cal-cell.is-sport-hit {
+  background: #f2f6ff;
+  box-shadow: inset 0 3px 0 #fdd400;
+}
+
+.games-cal-cell.is-empty .games-cal-day {
+  color: #b7bdc9;
+}
+
+.games-cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.games-cal-day {
+  color: #111318;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.games-cal-count {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #003ec7;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.games-cal-chips {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.games-cal-chip {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 3px 7px;
+  border-left: 3px solid #003ec7;
+  border-radius: 6px;
+  background: #f4f6fb;
+}
+
+.games-cal-chip.is-off-island {
+  border-left-color: #128c83;
+  background: #eefaf7;
+}
+
+.games-cal-chip b {
+  overflow: hidden;
+  color: #202631;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.games-cal-chip small {
+  overflow: hidden;
+  color: #7b8493;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.games-cal-more {
+  color: #003ec7;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+
+.games-calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #eef0f5;
+  color: #596271;
+  font-size: 11.5px;
+}
+
+.games-calendar-legend small {
+  margin-left: auto;
+  color: #7b8493;
+  font-size: 11.5px;
+}
+
+.games-legend-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 5px;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+.games-legend-dot.is-jeju {
+  background: #003ec7;
+}
+
+.games-legend-dot.is-off-island {
+  background: #128c83;
+}
+
+.games-legend-dot.is-selected {
+  background: #dde1ff;
+  box-shadow: inset 0 0 0 1px #003ec7;
+}
+
+/* 선택한 날짜의 전체 경기 목록 */
+.games-day-panel {
+  min-width: 0;
+  padding: 18px 20px;
+  border: 1px solid #dfe4eb;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.games-day-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e8ebf0;
+}
+
+.games-day-panel-head h3 {
+  margin: 0;
+  color: #111318;
+  font-size: 20px;
+}
+
+.games-day-panel-head h3 span {
+  color: #596271;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.games-day-panel-head strong {
+  color: #0b6c64;
+  font-size: 13px;
+  font-weight: 800;
   white-space: nowrap;
 }
 
@@ -1874,5 +2190,94 @@
 
   .games-my-sport-field input {
     font-size: 16px;
+  }
+}
+
+/* ── 달력 반응형: 900px 아래는 달력 우선 1단, 모바일은 날짜 칸 축약 ── */
+@media (max-width: 900px) {
+  .games-schedule-browser {
+    grid-template-columns: 1fr;
+  }
+
+  /* 좁은 화면에서는 좌측 종목 리스트 대신 종목 선택 드롭다운을 쓴다. */
+  .games-sport-index {
+    display: none;
+  }
+
+  .games-sport-select {
+    display: block;
+  }
+}
+
+@media (max-width: 680px) {
+  .games-calendar-panel {
+    padding: 14px 10px;
+  }
+
+  .games-calendar-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .games-calendar-title {
+    font-size: 17px;
+  }
+
+  .games-calendar-pre {
+    order: 4;
+    width: 100%;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .games-calendar-weekdays,
+  .games-calendar-grid,
+  .games-cal-row {
+    gap: 4px;
+  }
+
+  .games-cal-cell {
+    min-height: 58px;
+    gap: 2px;
+    padding: 5px 4px;
+    align-items: center;
+  }
+
+  .games-cal-head {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  /* 칸이 좁아 종목 칩 대신 경기 수만 남긴다. 자세한 목록은 아래 선택일 패널에서 본다. */
+  .games-cal-chips {
+    display: none;
+  }
+
+  .games-cal-count {
+    padding: 0 6px;
+    font-size: 10px;
+  }
+
+  .games-calendar-legend {
+    gap: 8px 12px;
+    font-size: 11px;
+  }
+
+  /* 모바일은 종목 칩을 숨기므로 제주·타 시도 색 범례도 함께 감춘다. */
+  .games-legend-scope {
+    display: none;
+  }
+
+  .games-calendar-legend small {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+
+  .games-day-panel {
+    padding: 16px 14px;
+  }
+
+  .games-day-panel-head h3 {
+    font-size: 17px;
   }
 }

@@ -23,20 +23,26 @@
   const noticeActions = document.getElementById("gamesNoticeActions");
   const overviewContent = document.getElementById("gamesOverviewContent");
   const scheduleSearch = document.getElementById("gamesScheduleSearch");
-  const scheduleDate = document.getElementById("gamesScheduleDate");
   const scheduleScope = document.getElementById("gamesScheduleScope");
   const scheduleCount = document.getElementById("gamesScheduleCount");
   const scheduleResults = document.getElementById("gamesScheduleResults");
+  const scheduleLive = document.getElementById("gamesScheduleLive");
   const contactGrid = document.getElementById("gamesContactGrid");
 
   const RECENT_SPORTS_KEY = "gachibom.paraGames.recentSports";
   const RECENT_SPORTS_LIMIT = 5;
+  // 달력 요일 머리글(일요일 시작)과 주말 색 구분에 쓴다.
+  const WEEKDAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
+  const CALENDAR_CHIP_LIMIT = 3;
 
   let pageData = null;
   let selectedVenueId = "";
-  let selectedScheduleSportIndex = 0;
+  let selectedScheduleSportIndex = -1;
   let facilityRequest = null;
   let facilityCache = null;
+  let calendarMonth = "";          // 화면에 보이는 달 "YYYY-MM"
+  let selectedScheduleDate = "";   // 달력에서 선택한 날 "YYYY-MM-DD"
+  let scheduleMonthRange = null;   // 데이터에 존재하는 달의 최소·최대
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -231,6 +237,13 @@
     const matchedSportIndex = pageData.sports.findIndex((sport) => normalizedText(sport.name).includes(normalizedText(keyword)));
     if (keyword && matchedSportIndex >= 0) {
       selectedScheduleSportIndex = matchedSportIndex;
+      // 8월 사전경기 종목(사격 등)을 찾으면 달력도 그 종목의 첫 경기 달로 옮겨 준다.
+      jumpCalendarToSport(matchedSportIndex);
+    } else if (!keyword) {
+      // 검색어를 지우면 강조와 달력 위치를 본대회 달로 되돌린다.
+      selectedScheduleSportIndex = -1;
+      calendarMonth = monthKeyOf(pageData.event.start_date);
+      selectedScheduleDate = "";
     }
     renderSchedule();
     if (remember && keyword && matchedSportIndex >= 0) {
@@ -299,47 +312,363 @@
     return hasOffIsland ? (sport.events.every((event) => event.location_scope === "off_island") ? "타 시도" : "제주·타 시도") : "제주";
   }
 
-  function renderSchedule() {
+  // ── 달력 계산용 날짜 도우미 ─────────────────────────────────────────────
+  function toIsoDate(year, month, day) {
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  }
+
+  function monthKeyOf(isoDate) {
+    return String(isoDate || "").slice(0, 7);
+  }
+
+  function parseMonthKey(monthKey) {
+    const [year, month] = String(monthKey).split("-").map(Number);
+    return { year, month };
+  }
+
+  function shiftMonth(monthKey, step) {
+    const { year, month } = parseMonthKey(monthKey);
+    const shifted = new Date(Date.UTC(year, month - 1 + step, 1));
+    return `${shifted.getUTCFullYear()}-${String(shifted.getUTCMonth() + 1).padStart(2, "0")}`;
+  }
+
+  function monthLabel(monthKey) {
+    const { year, month } = parseMonthKey(monthKey);
+    return `${year}년 ${month}월`;
+  }
+
+  function daysInMonth(monthKey) {
+    const { year, month } = parseMonthKey(monthKey);
+    return new Date(Date.UTC(year, month, 0)).getUTCDate();
+  }
+
+  function weekdayIndex(isoDate) {
+    const [year, month, day] = String(isoDate).split("-").map(Number);
+    return new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+  }
+
+  function dayLabel(isoDate) {
+    const [, month, day] = String(isoDate).split("-").map(Number);
+    return `${month}월 ${day}일`;
+  }
+
+  // 시작일~종료일 사이의 모든 날짜를 훑는다(경기가 여러 날 이어지는 종목 처리).
+  function eachDateInRange(startDate, endDate, callback) {
+    const start = Date.parse(`${startDate}T00:00:00Z`);
+    const end = Date.parse(`${endDate || startDate}T00:00:00Z`);
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) {
+      return;
+    }
+    const DAY_MS = 86400000;
+    const totalDays = Math.min(Math.round((end - start) / DAY_MS), 366);
+    for (let offset = 0; offset <= totalDays; offset += 1) {
+      const current = new Date(start + offset * DAY_MS);
+      callback(toIsoDate(current.getUTCFullYear(), current.getUTCMonth() + 1, current.getUTCDate()));
+    }
+  }
+
+  // ── 일정 인덱스 ────────────────────────────────────────────────────────
+  // 검색어·지역 필터를 통과한 경기만 (종목, 경기) 쌍으로 펼친다.
+  function filterScheduleEntries() {
     const query = normalizedText(scheduleSearch.value.trim());
-    const selectedDate = scheduleDate.value;
     const selectedScope = scheduleScope.value;
-    const filteredSports = pageData.sports.map((sport, sportIndex) => {
+    const entries = [];
+    pageData.sports.forEach((sport, sportIndex) => {
       const sportMatches = !query || normalizedText(sport.name).includes(query);
-      const events = sport.events.filter((event) => {
+      sport.events.forEach((event) => {
         const queryMatches = sportMatches || [event.division, event.disability, event.venue, event.schedule_label, event.preparation, event.scope_label]
           .some((value) => normalizedText(value).includes(query));
-        const dateMatches = selectedDate === "all"
-          || (selectedDate === "pre_event" && event.start_date < pageData.event.start_date)
-          || (event.start_date <= selectedDate && event.end_date >= selectedDate);
         const scopeMatches = selectedScope === "all" || event.location_scope === selectedScope;
-        return queryMatches && dateMatches && scopeMatches;
+        if (queryMatches && scopeMatches) {
+          entries.push({ sportIndex, sportName: sport.name, event });
+        }
       });
-      return { ...sport, sportIndex, events };
-    }).filter((sport) => sport.events.length);
+    });
+    return entries;
+  }
 
-    const rowCount = filteredSports.reduce((total, sport) => total + sport.events.length, 0);
-    scheduleCount.textContent = `${filteredSports.length}개 종목 · ${rowCount}개 경기장 항목`;
-    if (!filteredSports.length) {
+  // 날짜(YYYY-MM-DD) → 그날 열리는 경기 배열. 달력 뱃지·칩·선택일 목록이 모두 이 인덱스를 쓴다.
+  function buildDateIndex(entries) {
+    const index = new Map();
+    entries.forEach((entry) => {
+      eachDateInRange(entry.event.start_date, entry.event.end_date, (isoDate) => {
+        if (!index.has(isoDate)) {
+          index.set(isoDate, []);
+        }
+        index.get(isoDate).push(entry);
+      });
+    });
+    // 좌측 종목 리스트와 같은 순서로 맞춰 칩·목록 순서가 헷갈리지 않게 한다.
+    index.forEach((list) => list.sort((left, right) => left.sportIndex - right.sportIndex));
+    return index;
+  }
+
+  // 좌측 종목 리스트용 요약(필터 통과 경기 기준).
+  function summarizeSports(entries) {
+    const summaries = new Map();
+    entries.forEach((entry) => {
+      if (!summaries.has(entry.sportIndex)) {
+        summaries.set(entry.sportIndex, { sportIndex: entry.sportIndex, name: entry.sportName, events: [] });
+      }
+      summaries.get(entry.sportIndex).events.push(entry.event);
+    });
+    return [...summaries.values()].sort((left, right) => left.sportIndex - right.sportIndex);
+  }
+
+  // 데이터에 실제로 존재하는 달의 범위(8월 사전경기 ~ 9월 본대회)를 한 번만 계산한다.
+  function ensureMonthRange() {
+    if (scheduleMonthRange) {
+      return scheduleMonthRange;
+    }
+    const allEvents = flattenSchedule();
+    const startDates = allEvents.map((item) => item.start_date).filter(Boolean).sort();
+    const endDates = allEvents.map((item) => item.end_date || item.start_date).filter(Boolean).sort();
+    scheduleMonthRange = {
+      first: monthKeyOf(startDates[0] || pageData.event.start_date),
+      last: monthKeyOf(endDates[endDates.length - 1] || pageData.event.end_date),
+    };
+    return scheduleMonthRange;
+  }
+
+  // 사전경기가 있는 달 중 가장 이른 달(핀 버튼 목적지)과 그 종목 이름들.
+  function preEventSummary() {
+    const range = ensureMonthRange();
+    const mainMonth = monthKeyOf(pageData.event.start_date);
+    if (range.first === mainMonth) {
+      return null;
+    }
+    const names = new Set();
+    pageData.sports.forEach((sport) => {
+      sport.events.forEach((event) => {
+        if (monthKeyOf(event.start_date) === range.first) {
+          names.add(sport.name);
+        }
+      });
+    });
+    const { month } = parseMonthKey(range.first);
+    return { monthKey: range.first, month, names: [...names] };
+  }
+
+  function clampMonth(monthKey) {
+    const range = ensureMonthRange();
+    if (monthKey < range.first) {
+      return range.first;
+    }
+    if (monthKey > range.last) {
+      return range.last;
+    }
+    return monthKey;
+  }
+
+  // 보이는 달과 선택한 날짜를 항상 유효한 값으로 맞춘다(필터로 경기가 사라진 경우 포함).
+  function ensureCalendarSelection(dateIndex) {
+    if (!calendarMonth) {
+      calendarMonth = monthKeyOf(pageData.event.start_date);
+    }
+    calendarMonth = clampMonth(calendarMonth);
+
+    const monthDates = [...dateIndex.keys()].filter((isoDate) => monthKeyOf(isoDate) === calendarMonth).sort();
+    if (selectedScheduleDate && monthKeyOf(selectedScheduleDate) === calendarMonth && dateIndex.has(selectedScheduleDate)) {
+      return monthDates;
+    }
+    const today = currentLocalDate();
+    const eventStart = pageData.event.start_date;
+    selectedScheduleDate = [today, eventStart].find((candidate) => monthDates.includes(candidate)) || monthDates[0] || "";
+    return monthDates;
+  }
+
+  // 종목을 고르면 그 종목의 첫 경기가 있는 달로 달력을 옮긴다.
+  function jumpCalendarToSport(sportIndex) {
+    const sport = pageData?.sports?.[sportIndex];
+    if (!sport?.events?.length) {
+      return;
+    }
+    const firstDate = sport.events.map((event) => event.start_date).filter(Boolean).sort()[0];
+    if (!firstDate) {
+      return;
+    }
+    calendarMonth = clampMonth(monthKeyOf(firstDate));
+    selectedScheduleDate = firstDate;
+  }
+
+  // ── 렌더링 ────────────────────────────────────────────────────────────
+  function calendarChipMarkup(entry) {
+    const isOffIsland = entry.event.location_scope === "off_island";
+    return `
+      <span class="games-cal-chip ${isOffIsland ? "is-off-island" : ""}">
+        <b>${escapeHtml(entry.sportName)}</b>
+        <small>${escapeHtml(entry.event.venue)}</small>
+      </span>
+    `;
+  }
+
+  function calendarCellMarkup(isoDate, entries) {
+    const day = Number(isoDate.slice(8, 10));
+    const weekday = weekdayIndex(isoDate);
+    const weekendClass = weekday === 0 ? "is-sunday" : (weekday === 6 ? "is-saturday" : "");
+    if (!entries.length) {
+      return `<div class="games-cal-cell is-empty ${weekendClass}" role="gridcell"><span class="games-cal-day">${day}</span></div>`;
+    }
+    const isSelected = isoDate === selectedScheduleDate;
+    const hasSelectedSport = selectedScheduleSportIndex >= 0 && entries.some((entry) => entry.sportIndex === selectedScheduleSportIndex);
+    const shown = entries.slice(0, CALENDAR_CHIP_LIMIT);
+    const restCount = entries.length - shown.length;
+    const sportHitLabel = hasSelectedSport ? `, ${pageData.sports[selectedScheduleSportIndex].name} 경기일` : "";
+    return `
+      <button class="games-cal-cell is-active ${weekendClass} ${isSelected ? "is-selected" : ""} ${hasSelectedSport ? "is-sport-hit" : ""}"
+        type="button" role="gridcell" aria-selected="${isSelected}" data-schedule-date="${isoDate}"
+        aria-label="${dayLabel(isoDate)} ${entries.length}경기${sportHitLabel}">
+        <span class="games-cal-head">
+          <span class="games-cal-day">${day}</span>
+          <span class="games-cal-count">${entries.length}</span>
+        </span>
+        <span class="games-cal-chips">
+          ${shown.map(calendarChipMarkup).join("")}
+          ${restCount > 0 ? `<span class="games-cal-more">+${restCount}경기 더</span>` : ""}
+        </span>
+      </button>
+    `;
+  }
+
+  function calendarMarkup(dateIndex) {
+    const range = ensureMonthRange();
+    const totalDays = daysInMonth(calendarMonth);
+    const firstWeekday = weekdayIndex(`${calendarMonth}-01`);
+    const cells = [];
+    for (let index = 0; index < firstWeekday; index += 1) {
+      cells.push('<div class="games-cal-cell is-pad" role="gridcell" aria-hidden="true"></div>');
+    }
+    for (let day = 1; day <= totalDays; day += 1) {
+      const isoDate = `${calendarMonth}-${String(day).padStart(2, "0")}`;
+      cells.push(calendarCellMarkup(isoDate, dateIndex.get(isoDate) || []));
+    }
+    while (cells.length % 7 !== 0) {
+      cells.push('<div class="games-cal-cell is-pad" role="gridcell" aria-hidden="true"></div>');
+    }
+    const rows = [];
+    for (let start = 0; start < cells.length; start += 7) {
+      rows.push(`<div class="games-cal-row" role="row">${cells.slice(start, start + 7).join("")}</div>`);
+    }
+
+    const preEvent = preEventSummary();
+    const preEventPin = preEvent && preEvent.monthKey !== calendarMonth
+      ? `<button class="games-calendar-pre" type="button" data-goto-month="${preEvent.monthKey}">${preEvent.month}월 사전경기 ${preEvent.names.length}종목(${escapeHtml(preEvent.names.join("·"))}) →</button>`
+      : "";
+
+    return `
+      <div class="games-calendar-panel">
+        <div class="games-calendar-bar">
+          <button class="games-calendar-nav" type="button" data-month-step="-1" ${calendarMonth <= range.first ? "disabled" : ""} aria-label="이전 달 보기">
+            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+          </button>
+          <h3 class="games-calendar-title" id="gamesCalendarTitle">${monthLabel(calendarMonth)}</h3>
+          <button class="games-calendar-nav" type="button" data-month-step="1" ${calendarMonth >= range.last ? "disabled" : ""} aria-label="다음 달 보기">
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+          </button>
+          ${preEventPin}
+        </div>
+        <div class="games-calendar-weekdays" aria-hidden="true">
+          ${WEEKDAY_LABELS.map((label, index) => `<span class="${index === 0 ? "is-sunday" : (index === 6 ? "is-saturday" : "")}">${label}</span>`).join("")}
+        </div>
+        <div class="games-calendar-grid" role="grid" aria-labelledby="gamesCalendarTitle">
+          ${rows.join("")}
+        </div>
+        <div class="games-calendar-legend">
+          <span class="games-legend-scope"><i class="games-legend-dot is-jeju" aria-hidden="true"></i>제주 경기장</span>
+          <span class="games-legend-scope"><i class="games-legend-dot is-off-island" aria-hidden="true"></i>타 시도 경기장</span>
+          <span><i class="games-legend-dot is-selected" aria-hidden="true"></i>선택한 날짜</span>
+          <small>칸 우측 숫자 = 그날 경기 수 · 날짜를 누르면 그날 전체 목록</small>
+        </div>
+      </div>
+    `;
+  }
+
+  // 선택한 날짜의 경기 한 줄. 기존 일정 행 구조를 그대로 재사용한다(경기 시각 안내 포함).
+  function scheduleRowMarkup(entry) {
+    const { event, sportName } = entry;
+    const mapSearchUrl = venueSearchUrl(event);
+    const detailUrl = event.detail_venue_id ? `para-games.html?venue=${encodeURIComponent(event.detail_venue_id)}#gamesFieldGuide` : "";
+    const noticeUrl = scheduleNoticeUrl(event);
+    const timeNote = noticeUrl
+      ? `<a href="${escapeHtml(noticeUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sportName)} 경기 시각은 종목단체 공지 확인, 새 창">경기 시각은 종목단체 공지 확인 <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>`
+      : "<span>경기 시각은 종목단체 공지 확인</span>";
+    const divisionText = [event.division, event.disability].filter(Boolean).join(" · ");
+    return `
+      <div class="games-schedule-row ${event.location_scope === "off_island" ? "is-off-island" : ""}" role="listitem">
+        <div class="games-schedule-division"><span>${escapeHtml(sportName)}</span><small>${escapeHtml(divisionText)}</small></div>
+        <div class="games-schedule-date"><strong>${escapeHtml(event.schedule_label)}</strong>${event.preparation ? `<small>${escapeHtml(event.preparation)}</small>` : ""}</div>
+        <div class="games-schedule-venue">
+          <span>${event.location_scope === "off_island" ? `타 시도 · ${escapeHtml(event.scope_label || "")}` : "제주"}</span>
+          <strong>${escapeHtml(event.venue)}</strong>
+        </div>
+        <div class="games-schedule-actions">
+          <a href="${escapeHtml(mapSearchUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(event.venue)} 지도 검색, 새 창"><i class="bi bi-geo-alt" aria-hidden="true"></i> 지도 검색</a>
+          ${detailUrl ? `<a href="${escapeHtml(detailUrl)}"><i class="bi bi-universal-access" aria-hidden="true"></i> 접근 상세</a>` : ""}
+        </div>
+        <p class="games-schedule-time-note"><i class="bi bi-clock" aria-hidden="true"></i> ${timeNote}</p>
+      </div>
+    `;
+  }
+
+  function dayPanelMarkup(dateIndex) {
+    if (!selectedScheduleDate) {
+      return `
+        <section class="games-day-panel" id="gamesDayPanel" aria-live="polite">
+          <p class="games-empty">이 달에는 조건에 맞는 경기가 없습니다. 달을 옮기거나 검색어를 지워 보세요.</p>
+        </section>
+      `;
+    }
+    const entries = dateIndex.get(selectedScheduleDate) || [];
+    const weekday = WEEKDAY_LABELS[weekdayIndex(selectedScheduleDate)];
+    return `
+      <section class="games-day-panel" id="gamesDayPanel" aria-live="polite" aria-labelledby="gamesDayPanelTitle">
+        <header class="games-day-panel-head">
+          <h3 id="gamesDayPanelTitle">${dayLabel(selectedScheduleDate)} <span>${weekday}요일</span></h3>
+          <strong>${entries.length}경기</strong>
+        </header>
+        <div class="games-sport-events" role="list">
+          ${entries.map(scheduleRowMarkup).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderSchedule({ focusSelectedDate = false } = {}) {
+    const entries = filterScheduleEntries();
+    const sportSummaries = summarizeSports(entries);
+    scheduleCount.textContent = `${sportSummaries.length}개 종목 · ${entries.length}개 경기장 항목`;
+
+    if (!entries.length) {
       scheduleResults.innerHTML = '<p class="games-empty">조건에 맞는 경기 일정이 없습니다.</p>';
       return;
     }
 
-    const selectedSport = filteredSports.find((sport) => sport.sportIndex === selectedScheduleSportIndex) || filteredSports[0];
-    selectedScheduleSportIndex = selectedSport.sportIndex;
-    const selectedScopeLabel = scheduleScopeLabel(selectedSport);
+    const dateIndex = buildDateIndex(entries);
+    ensureCalendarSelection(dateIndex);
+    const activeSportExists = sportSummaries.some((sport) => sport.sportIndex === selectedScheduleSportIndex);
+    if (!activeSportExists) {
+      selectedScheduleSportIndex = -1;
+    }
+
     scheduleResults.innerHTML = `
       <label class="games-sport-select" for="gamesSportSelect">
-        <span>종목 바로 선택</span>
+        <span>종목으로 달력 보기</span>
         <select id="gamesSportSelect" aria-describedby="gamesScheduleCount">
-          ${filteredSports.map((sport) => `<option value="${sport.sportIndex}" ${sport.sportIndex === selectedScheduleSportIndex ? "selected" : ""}>${escapeHtml(sport.name)} · ${sport.events.length}개 일정</option>`).join("")}
+          <option value="-1" ${selectedScheduleSportIndex < 0 ? "selected" : ""}>전체 종목</option>
+          ${sportSummaries.map((sport) => `<option value="${sport.sportIndex}" ${sport.sportIndex === selectedScheduleSportIndex ? "selected" : ""}>${escapeHtml(sport.name)} · ${sport.events.length}개 일정</option>`).join("")}
         </select>
       </label>
       <div class="games-schedule-browser">
         <nav class="games-sport-index" aria-label="종목 선택">
-          <div class="games-sport-index-head"><strong>종목 선택</strong><span>${filteredSports.length}개</span></div>
+          <div class="games-sport-index-head"><strong>종목 선택</strong><span>${sportSummaries.length}개</span></div>
           <div class="games-sport-index-list">
-            ${filteredSports.map((sport) => `
-              <button class="games-sport-button ${sport.sportIndex === selectedScheduleSportIndex ? "is-active" : ""}" type="button" data-sport-index="${sport.sportIndex}" aria-pressed="${sport.sportIndex === selectedScheduleSportIndex}" aria-controls="gamesSelectedSport">
+            <button class="games-sport-button is-all ${selectedScheduleSportIndex < 0 ? "is-active" : ""}" type="button" data-sport-index="-1" aria-pressed="${selectedScheduleSportIndex < 0}">
+              <span><i class="bi bi-grid" aria-hidden="true"></i></span>
+              <strong>전체 종목</strong>
+              <small>달력에 모든 경기 표시</small>
+            </button>
+            ${sportSummaries.map((sport) => `
+              <button class="games-sport-button ${sport.sportIndex === selectedScheduleSportIndex ? "is-active" : ""}" type="button" data-sport-index="${sport.sportIndex}" aria-pressed="${sport.sportIndex === selectedScheduleSportIndex}">
                 <span>${String(sport.sportIndex + 1).padStart(2, "0")}</span>
                 <strong>${escapeHtml(sport.name)}</strong>
                 <small>${sport.events.length}개 일정 · ${escapeHtml(scheduleScopeLabel(sport))}</small>
@@ -347,40 +676,24 @@
             `).join("")}
           </div>
         </nav>
-        <section class="games-selected-sport" id="gamesSelectedSport" aria-labelledby="gamesSelectedSportTitle">
-          <header class="games-selected-sport-head">
-            <span>선택한 종목</span>
-            <h3 id="gamesSelectedSportTitle">${escapeHtml(selectedSport.name)}</h3>
-            <p>${selectedSport.events.length}개 일정 · ${escapeHtml(selectedScopeLabel)}</p>
-          </header>
-          <div class="games-sport-events" role="list">
-            ${selectedSport.events.map((event) => {
-              const mapSearchUrl = venueSearchUrl(event);
-              const detailUrl = event.detail_venue_id ? `para-games.html?venue=${encodeURIComponent(event.detail_venue_id)}#gamesFieldGuide` : "";
-              const noticeUrl = scheduleNoticeUrl(event);
-              const timeNote = noticeUrl
-                ? `<a href="${escapeHtml(noticeUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(selectedSport.name)} 경기 시각은 종목단체 공지 확인, 새 창">경기 시각은 종목단체 공지 확인 <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>`
-                : "<span>경기 시각은 종목단체 공지 확인</span>";
-              return `
-                <div class="games-schedule-row ${event.location_scope === "off_island" ? "is-off-island" : ""}" role="listitem">
-                  <div class="games-schedule-division"><span>${escapeHtml(event.division)}</span><small>${escapeHtml(event.disability)}</small></div>
-                  <div class="games-schedule-date"><strong>${escapeHtml(event.schedule_label)}</strong>${event.preparation ? `<small>${escapeHtml(event.preparation)}</small>` : ""}</div>
-                  <div class="games-schedule-venue">
-                    <span>${event.location_scope === "off_island" ? `타 시도 · ${escapeHtml(event.scope_label || "")}` : "제주"}</span>
-                    <strong>${escapeHtml(event.venue)}</strong>
-                  </div>
-                  <div class="games-schedule-actions">
-                    <a href="${escapeHtml(mapSearchUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(event.venue)} 지도 검색, 새 창"><i class="bi bi-geo-alt" aria-hidden="true"></i> 지도 검색</a>
-                    ${detailUrl ? `<a href="${escapeHtml(detailUrl)}"><i class="bi bi-universal-access" aria-hidden="true"></i> 접근 상세</a>` : ""}
-                  </div>
-                  <p class="games-schedule-time-note"><i class="bi bi-clock" aria-hidden="true"></i> ${timeNote}</p>
-                </div>
-              `;
-            }).join("")}
-          </div>
-        </section>
+        <div class="games-calendar-pane">
+          ${calendarMarkup(dateIndex)}
+          ${dayPanelMarkup(dateIndex)}
+        </div>
       </div>
     `;
+
+    if (focusSelectedDate && selectedScheduleDate) {
+      scheduleResults.querySelector(`[data-schedule-date="${selectedScheduleDate}"]`)?.focus();
+    }
+  }
+
+  // 선택한 날짜가 바뀐 것을 스크린리더에도 알린다.
+  function announceSelectedDate(count) {
+    if (!scheduleLive || !selectedScheduleDate) {
+      return;
+    }
+    scheduleLive.textContent = `${dayLabel(selectedScheduleDate)} ${count}경기 목록을 표시했습니다.`;
   }
 
   function renderContacts() {
@@ -680,12 +993,10 @@
     }
   });
 
-  [scheduleDate, scheduleScope].forEach((control) => {
-    control.addEventListener("change", () => {
-      if (pageData) {
-        renderSchedule();
-      }
-    });
+  scheduleScope.addEventListener("change", () => {
+    if (pageData) {
+      renderSchedule();
+    }
   });
 
   mySportSearch?.addEventListener("input", () => {
@@ -711,14 +1022,44 @@
   });
 
   scheduleResults.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-sport-index]");
-    if (!button || !pageData) {
+    if (!pageData) {
       return;
     }
-    selectedScheduleSportIndex = Number(button.dataset.sportIndex);
-    rememberSport(pageData.sports[selectedScheduleSportIndex]?.name);
-    renderSchedule();
-    scheduleResults.querySelector(`[data-sport-index="${selectedScheduleSportIndex}"]`)?.focus();
+
+    // 달력 날짜 선택 → 그날 전체 경기 목록
+    const dateCell = event.target.closest("[data-schedule-date]");
+    if (dateCell) {
+      selectedScheduleDate = dateCell.dataset.scheduleDate;
+      renderSchedule({ focusSelectedDate: true });
+      announceSelectedDate(buildDateIndex(filterScheduleEntries()).get(selectedScheduleDate)?.length || 0);
+      return;
+    }
+
+    // 월 이동(‹ ›)과 8월 사전경기 핀
+    const monthStepButton = event.target.closest("[data-month-step]");
+    const gotoMonthButton = event.target.closest("[data-goto-month]");
+    if (monthStepButton || gotoMonthButton) {
+      calendarMonth = monthStepButton
+        ? shiftMonth(calendarMonth, Number(monthStepButton.dataset.monthStep))
+        : gotoMonthButton.dataset.gotoMonth;
+      selectedScheduleDate = "";
+      renderSchedule();
+      scheduleResults.querySelector(".games-calendar-title")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      return;
+    }
+
+    // 좌측 종목 선택 → 달력에 그 종목 경기일 강조(양방향 연동)
+    const sportButton = event.target.closest("[data-sport-index]");
+    if (sportButton) {
+      const nextIndex = Number(sportButton.dataset.sportIndex);
+      selectedScheduleSportIndex = nextIndex === selectedScheduleSportIndex ? -1 : nextIndex;
+      if (selectedScheduleSportIndex >= 0) {
+        rememberSport(pageData.sports[selectedScheduleSportIndex]?.name);
+        jumpCalendarToSport(selectedScheduleSportIndex);
+      }
+      renderSchedule();
+      scheduleResults.querySelector(`[data-sport-index="${selectedScheduleSportIndex}"]`)?.focus();
+    }
   });
 
   scheduleResults.addEventListener("change", (event) => {
@@ -726,7 +1067,10 @@
       return;
     }
     selectedScheduleSportIndex = Number(event.target.value);
-    rememberSport(pageData.sports[selectedScheduleSportIndex]?.name);
+    if (selectedScheduleSportIndex >= 0) {
+      rememberSport(pageData.sports[selectedScheduleSportIndex]?.name);
+      jumpCalendarToSport(selectedScheduleSportIndex);
+    }
     renderSchedule();
     document.getElementById("gamesSportSelect")?.focus();
   });
