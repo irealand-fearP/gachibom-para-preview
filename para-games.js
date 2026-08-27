@@ -100,15 +100,10 @@
     return `https://map.kakao.com/link/search/${encodeURIComponent(query)}`;
   }
 
-  // 데이터에 경기별 시작 시각이 없으므로, 시각 대신 확인처(종목단체 공지)를 그 자리에서 알려 준다.
-  function scheduleNoticeUrl(event) {
-    const venue = event.detail_venue_id
-      ? pageData.venues.find((item) => item.id === event.detail_venue_id)
-      : null;
-    return safeHttpUrl(venue?.source_url)
-      || safeHttpUrl(pageData.event?.source_url)
-      || safeHttpUrl(pageData.notices?.[0]?.source_url);
-  }
+  // 데이터에 경기별 시작 시각이 없고 초안이라 계속 바뀌므로, 시각 스냅샷을 심는 대신
+  // 항상 최신인 단일 공식 일정·결과 페이지 한 곳으로만 보낸다.
+  // (종목별 연맹 URL 폴백은 탁구→농구연맹처럼 엉뚱한 곳으로 가는 오연결이 있어 제거했다.)
+  const OFFICIAL_SCHEDULE_URL = "https://chg.koreanpc.kr/2026MSNPG/gmSchdlRslt/SprtsUnitGmSchdlRslt";
 
   function safeContactUrl(action) {
     const kind = String(action?.kind || "");
@@ -677,10 +672,7 @@
     const { event, sportName } = entry;
     const mapSearchUrl = venueSearchUrl(event);
     const detailUrl = event.detail_venue_id ? `para-games.html?venue=${encodeURIComponent(event.detail_venue_id)}#gamesFieldGuide` : "";
-    const noticeUrl = scheduleNoticeUrl(event);
-    const timeNote = noticeUrl
-      ? `<a href="${escapeHtml(noticeUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sportName)} 경기 시각은 종목단체 공지 확인, 새 창">경기 시각은 종목단체 공지 확인 <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>`
-      : "<span>경기 시각은 종목단체 공지 확인</span>";
+    const timeNote = `<a href="${escapeHtml(OFFICIAL_SCHEDULE_URL)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sportName)} 경기 시각은 공식 일정에서 확인, 새 창">경기 시각은 공식 일정에서 확인 <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>`;
     const divisionText = [event.division, event.disability].filter(Boolean).join(" · ");
     return `
       <div class="games-schedule-row ${event.location_scope === "off_island" ? "is-off-island" : ""}" role="listitem">
