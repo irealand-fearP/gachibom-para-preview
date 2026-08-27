@@ -40,6 +40,8 @@
   // 달력 요일 머리글(일요일 시작)과 주말 색 구분에 쓴다.
   const WEEKDAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
   const CALENDAR_CHIP_LIMIT = 3;
+  // 하루 최대 34경기라 목록이 너무 길어져, 그날 목록은 한 페이지 5개씩 나눠 본다.
+  const DAY_PANEL_PAGE_SIZE = 5;
 
   let pageData = null;
   let selectedVenueId = "";
@@ -48,6 +50,12 @@
   let calendarMonth = "";          // 화면에 보이는 달 "YYYY-MM"
   let selectedScheduleDate = "";   // 달력에서 선택한 날 "YYYY-MM-DD"
   let scheduleMonthRange = null;   // 데이터에 존재하는 달의 최소·최대
+  let dayPanelPage = 1;            // 그날 경기 목록의 현재 페이지(1부터)
+
+  // 날짜를 새로 고르거나 검색·필터가 바뀌면 목록을 항상 첫 페이지부터 보여 준다.
+  function resetDayPanelPage() {
+    dayPanelPage = 1;
+  }
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -292,6 +300,7 @@
     if (!pageData) {
       return;
     }
+    resetDayPanelPage();
     const matchedSportIndex = pageData.sports.findIndex((sport) => normalizedText(sport.name).includes(normalizedText(keyword)));
     if (keyword && matchedSportIndex >= 0) {
       selectedScheduleSportIndex = matchedSportIndex;
@@ -557,7 +566,12 @@
     }
     const today = currentLocalDate();
     const eventStart = pageData.event.start_date;
-    selectedScheduleDate = [today, eventStart].find((candidate) => monthDates.includes(candidate)) || monthDates[0] || "";
+    const nextDate = [today, eventStart].find((candidate) => monthDates.includes(candidate)) || monthDates[0] || "";
+    if (nextDate !== selectedScheduleDate) {
+      // 필터·달 이동으로 선택 날짜가 자동으로 바뀐 경우에도 첫 페이지부터 다시 본다.
+      resetDayPanelPage();
+    }
+    selectedScheduleDate = nextDate;
     return monthDates;
   }
 
@@ -701,6 +715,25 @@
     }
     const entries = dateIndex.get(selectedScheduleDate) || [];
     const weekday = WEEKDAY_LABELS[weekdayIndex(selectedScheduleDate)];
+    const page = clampDayPanelPage(entries.length);
+    dayPanelPage = page;
+    const totalPages = dayPanelTotalPages(entries.length);
+    const startIndex = (page - 1) * DAY_PANEL_PAGE_SIZE;
+    const pageEntries = entries.slice(startIndex, startIndex + DAY_PANEL_PAGE_SIZE);
+    const rangeLabel = dayPanelRangeLabel(entries.length);
+    // 경기가 한 페이지에 다 들어가면 컨트롤을 그리지 않는다(불필요한 버튼 노출 방지).
+    const pager = totalPages <= 1 ? "" : `
+        <nav class="games-day-pager" aria-label="그날 경기 목록 페이지 이동">
+          <button class="games-day-pager-btn" type="button" data-day-page-step="-1"
+            aria-label="이전 ${DAY_PANEL_PAGE_SIZE}경기 보기" ${page <= 1 ? "disabled" : ""}>
+            <i class="bi bi-chevron-left" aria-hidden="true"></i> 이전
+          </button>
+          <span class="games-day-pager-status">${rangeLabel} · ${page} / ${totalPages}페이지</span>
+          <button class="games-day-pager-btn" type="button" data-day-page-step="1"
+            aria-label="다음 ${DAY_PANEL_PAGE_SIZE}경기 보기" ${page >= totalPages ? "disabled" : ""}>
+            다음 <i class="bi bi-chevron-right" aria-hidden="true"></i>
+          </button>
+        </nav>`;
     return `
       <section class="games-day-panel" id="gamesDayPanel" aria-live="polite" aria-labelledby="gamesDayPanelTitle">
         <header class="games-day-panel-head">
@@ -708,10 +741,45 @@
           <strong>${entries.length}경기</strong>
         </header>
         <div class="games-sport-events" role="list">
-          ${entries.map(scheduleRowMarkup).join("")}
+          ${pageEntries.map(scheduleRowMarkup).join("")}
         </div>
+        ${pager}
       </section>
     `;
+  }
+
+  function dayPanelTotalPages(totalCount) {
+    return Math.max(1, Math.ceil(totalCount / DAY_PANEL_PAGE_SIZE));
+  }
+
+  // 필터로 경기 수가 줄어도 페이지 번호가 범위를 벗어나지 않게 잡아 준다.
+  function clampDayPanelPage(totalCount) {
+    return Math.min(Math.max(1, dayPanelPage), dayPanelTotalPages(totalCount));
+  }
+
+  // "1–5 / 전체 34경기" 형태의 현재 위치 표시.
+  function dayPanelRangeLabel(totalCount) {
+    if (!totalCount) {
+      return "0 / 전체 0경기";
+    }
+    const start = (clampDayPanelPage(totalCount) - 1) * DAY_PANEL_PAGE_SIZE + 1;
+    const end = Math.min(start + DAY_PANEL_PAGE_SIZE - 1, totalCount);
+    return `${start}–${end} / 전체 ${totalCount}경기`;
+  }
+
+  // 페이지 이동은 달력까지 다시 그릴 필요가 없어 그날 목록 노드만 교체한다.
+  function renderDayPanelOnly() {
+    const panel = scheduleResults.querySelector("#gamesDayPanel");
+    if (!panel) {
+      renderSchedule();
+      return;
+    }
+    const dateIndex = buildDateIndex(filterScheduleEntries());
+    panel.outerHTML = dayPanelMarkup(dateIndex);
+    const total = dateIndex.get(selectedScheduleDate)?.length || 0;
+    if (scheduleLive) {
+      scheduleLive.textContent = `${dayLabel(selectedScheduleDate)} ${dayPanelRangeLabel(total)}를 표시했습니다.`;
+    }
   }
 
   function renderSchedule({ focusSelectedDate = false } = {}) {
@@ -1141,20 +1209,24 @@
     }
   });
 
+  // 검색어·지역·장애유형이 바뀌면 목록 내용이 달라지므로 항상 1페이지로 되돌린다.
   scheduleSearch.addEventListener("input", () => {
     if (pageData) {
+      resetDayPanelPage();
       renderSchedule();
     }
   });
 
   scheduleScope.addEventListener("change", () => {
     if (pageData) {
+      resetDayPanelPage();
       renderSchedule();
     }
   });
 
   scheduleDisability?.addEventListener("change", () => {
     if (pageData) {
+      resetDayPanelPage();
       renderSchedule();
     }
   });
@@ -1186,10 +1258,22 @@
       return;
     }
 
+    // 그날 목록 페이지 이동(‹ 이전 / 다음 ›) — 달력은 그대로 두고 목록만 갱신
+    const dayPageButton = event.target.closest("[data-day-page-step]");
+    if (dayPageButton) {
+      dayPanelPage += Number(dayPageButton.dataset.dayPageStep);
+      renderDayPanelOnly();
+      // 교체된 노드에서 같은 방향 버튼에 포커스를 되돌려 연속 조작이 끊기지 않게 한다.
+      const sameButton = scheduleResults.querySelector(`[data-day-page-step="${dayPageButton.dataset.dayPageStep}"]`);
+      (sameButton && !sameButton.disabled ? sameButton : scheduleResults.querySelector("[data-day-page-step]"))?.focus();
+      return;
+    }
+
     // 달력 날짜 선택 → 그날 전체 경기 목록
     const dateCell = event.target.closest("[data-schedule-date]");
     if (dateCell) {
       selectedScheduleDate = dateCell.dataset.scheduleDate;
+      resetDayPanelPage();
       renderSchedule({ focusSelectedDate: true });
       announceSelectedDate(buildDateIndex(filterScheduleEntries()).get(selectedScheduleDate)?.length || 0);
       return;
@@ -1203,6 +1287,7 @@
         ? shiftMonth(calendarMonth, Number(monthStepButton.dataset.monthStep))
         : gotoMonthButton.dataset.gotoMonth;
       selectedScheduleDate = "";
+      resetDayPanelPage();
       renderSchedule();
       scheduleResults.querySelector(".games-calendar-title")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
       return;
@@ -1213,6 +1298,7 @@
     if (sportButton) {
       const nextIndex = Number(sportButton.dataset.sportIndex);
       selectedScheduleSportIndex = nextIndex === selectedScheduleSportIndex ? -1 : nextIndex;
+      resetDayPanelPage();
       if (selectedScheduleSportIndex >= 0) {
         rememberSport(pageData.sports[selectedScheduleSportIndex]?.name);
         jumpCalendarToSport(selectedScheduleSportIndex);
@@ -1227,6 +1313,7 @@
       return;
     }
     selectedScheduleSportIndex = Number(event.target.value);
+    resetDayPanelPage();
     if (selectedScheduleSportIndex >= 0) {
       rememberSport(pageData.sports[selectedScheduleSportIndex]?.name);
       jumpCalendarToSport(selectedScheduleSportIndex);

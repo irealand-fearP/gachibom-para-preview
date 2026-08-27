@@ -2364,6 +2364,51 @@
   white-space: nowrap;
 }
 
+/* 그날 목록 페이지 이동(한 페이지 5경기) */
+.games-day-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #e8ebf0;
+}
+
+.games-day-pager-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid #c9d2de;
+  border-radius: 10px;
+  background: #fff;
+  color: #14306b;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.games-day-pager-btn:hover:not(:disabled) {
+  border-color: #003ec7;
+  background: #f2f5ff;
+}
+
+.games-day-pager-btn:disabled {
+  border-color: #e3e7ee;
+  background: #f5f6f8;
+  color: #98a1b0;
+  cursor: not-allowed;
+}
+
+.games-day-pager-status {
+  color: #45505f;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
 /* --- 하단 고정바 --- */
 .games-bottom-bar {
   position: fixed;
@@ -2539,5 +2584,23 @@
 
   .games-day-panel-head h3 {
     font-size: 17px;
+  }
+
+  /* 모바일에서도 한 손으로 누르기 쉽게 버튼 높이를 유지한다. */
+  .games-day-pager {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .games-day-pager-btn {
+    flex: 1 1 40%;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 12px;
+  }
+
+  .games-day-pager-status {
+    order: -1;
+    flex-basis: 100%;
   }
 }
