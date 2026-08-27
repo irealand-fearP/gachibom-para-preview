@@ -87,12 +87,76 @@
       "priority": "emergency"
     }
   ],
+  "official_sources": [
+    {
+      "id": "schedule-results",
+      "category": "경기 운영",
+      "title": "종목별 경기 일정·결과",
+      "description": "종목과 경기일을 선택해 공식 일정과 결과를 확인합니다.",
+      "url": "https://chg.koreanpc.kr/2026MSNPG/gmSchdlRslt/SprtsUnitGmSchdlRslt",
+      "status": "check_required",
+      "checked_at": "2026-08-27",
+      "review_every_days": 1,
+      "note": "첫 화면에 이전 연도 기록이 함께 보일 수 있어 대회명과 연도를 확인해야 합니다."
+    },
+    {
+      "id": "venue-guide",
+      "category": "경기장",
+      "title": "공식 경기장 안내",
+      "description": "대회 공식 경기장 목록과 기본 안내를 확인합니다.",
+      "url": "https://chg.koreanpc.kr/2026MSNPG/cnfrnOtln/StdmGd",
+      "status": "verified",
+      "checked_at": "2026-08-27",
+      "review_every_days": 7,
+      "note": "공식 경기장 안내 페이지 연결을 확인했습니다."
+    },
+    {
+      "id": "digital-ticket",
+      "category": "입장",
+      "title": "디지털 입장권",
+      "description": "입장권 이용 방법과 공식 안내를 확인합니다.",
+      "url": "https://jejusports.kr/46/ticket/introduction.htm",
+      "status": "verified",
+      "checked_at": "2026-08-27",
+      "review_every_days": 3,
+      "note": "공식 디지털 입장권 안내 페이지 연결을 확인했습니다."
+    },
+    {
+      "id": "barrier-free-tour",
+      "category": "무장애 관광",
+      "title": "제주 무장애 관광",
+      "description": "대회 전후 이용할 수 있는 공식 무장애 관광 정보를 확인합니다.",
+      "url": "https://jejusports.kr/46/jejutour/obstaclefre.htm",
+      "status": "verified",
+      "checked_at": "2026-08-27",
+      "review_every_days": 14,
+      "note": "공식 무장애 관광 안내 페이지 연결을 확인했습니다."
+    },
+    {
+      "id": "medical-support",
+      "category": "의료 지원",
+      "title": "의료 지원 공지",
+      "description": "의무실·지정병원 등 대회 의료 지원 공지를 확인합니다.",
+      "url": "https://jejusports.kr/46/notification/medical.htm",
+      "status": "check_required",
+      "checked_at": "2026-08-27",
+      "review_every_days": 1,
+      "note": "확인일 기준 게시글이 없어 현장 의료 안내 게시 여부를 다시 확인해야 합니다."
+    }
+  ],
+  "incidents": [],
   "notices": [
     {
       "title": "종목별 경기단체 공지를 함께 확인하세요",
       "detail": "전체 일정은 참가요강의 계획안입니다. 종목별 경기단체 공지와 현장 운영 안내가 더 최신이면 해당 공지를 우선해 주세요.",
       "source_title": "대한장애인육상연맹 일정 정정 안내",
-      "source_url": "https://kafd.koreanpc.kr/org/kafd/notice/25972"
+      "source_url": "https://kafd.koreanpc.kr/org/kafd/notice/25972",
+      "urgent": false,
+      "severity": "info",
+      "published_on": "2026-08-27",
+      "expires_on": "",
+      "affected_venues": [],
+      "affected_sports": []
     }
   ],
   "sports": [

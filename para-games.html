@@ -6,9 +6,9 @@
   <title>2026 제주 장애인체전 현장 안내 | 가치봄 제주</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="styles.css?v=20260827-7">
-  <link rel="stylesheet" href="para-games.css?v=20260828-9">
-  <link rel="stylesheet" href="help-chatbot.css?v=20260827-2">
+  <link rel="stylesheet" href="styles.css?v=20260826-1">
+  <link rel="stylesheet" href="para-games.css?v=20260828-2">
+  <link rel="stylesheet" href="help-chatbot.css?v=20260726-1">
 </head>
 <body class="para-games-page">
   <div class="app-shell">
@@ -88,11 +88,36 @@
       </section>
 
       <nav class="games-jump-nav" aria-label="대회 안내 바로가기">
+        <a href="#gamesOperations"><i class="bi bi-broadcast-pin" aria-hidden="true"></i> 오늘의 운영 상태</a>
         <a href="#gamesOverview"><i class="bi bi-flag" aria-hidden="true"></i> 대회 한눈에</a>
         <a href="#gamesSchedule"><i class="bi bi-calendar-week" aria-hidden="true"></i> 전체 종목 일정</a>
         <a href="#gamesFieldGuide"><i class="bi bi-universal-access" aria-hidden="true"></i> 경기장 상세</a>
         <a href="#gamesContacts"><i class="bi bi-telephone" aria-hidden="true"></i> 이동·긴급 연락처</a>
       </nav>
+
+      <section class="games-block games-operations" id="gamesOperations" aria-labelledby="gamesOperationsTitle">
+        <header class="games-block-head">
+          <div>
+            <span>공식정보 상태</span>
+            <h2 id="gamesOperationsTitle">출발 전 가장 먼저 확인</h2>
+          </div>
+          <p>공식 출처와 마지막 확인일을 표시하며, 재확인 주기가 지나면 자동으로 갱신 필요 상태가 됩니다.</p>
+        </header>
+        <div class="games-operations-banner" id="gamesOperationsSummary" role="status" aria-live="polite">
+          <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+          <div><strong>운영 상태를 확인하고 있습니다.</strong><span>잠시만 기다려 주세요.</span></div>
+        </div>
+        <div class="games-operations-layout">
+          <section class="games-incident-panel" aria-labelledby="gamesIncidentTitle">
+            <header><div><span>현장 영향</span><h3 id="gamesIncidentTitle">진행 중 운영 이슈</h3></div><b id="gamesIncidentCount">확인 중</b></header>
+            <div id="gamesIncidentList"><p class="games-loading">운영 이슈를 불러오고 있습니다.</p></div>
+          </section>
+          <section class="games-source-panel" aria-labelledby="gamesSourceTitle">
+            <header><div><span>OFFICIAL LINKS</span><h3 id="gamesSourceTitle">공식 정보 바로가기</h3></div><p>‘확인 완료’는 링크와 게시 상태를 확인했다는 뜻이며, 현장 이용 가능성을 보장하지 않습니다.</p></header>
+            <div class="games-source-grid" id="gamesOfficialSourceGrid"><p class="games-loading">공식 출처를 불러오고 있습니다.</p></div>
+          </section>
+        </div>
+      </section>
 
       <section class="games-block games-overview" id="gamesOverview" aria-labelledby="gamesOverviewTitle">
         <header class="games-block-head">
@@ -120,9 +145,10 @@
             <span>종목·경기장·장애 유형</span>
             <div><i class="bi bi-search" aria-hidden="true"></i><input id="gamesScheduleSearch" type="search" autocomplete="off" placeholder="예: 수영, 한라체육관, 시각"></div>
           </label>
-          <label for="gamesScheduleScope"><span>지역</span><select id="gamesScheduleScope"><option value="all">전체 지역</option><option value="jeju">제주 경기장</option><option value="off_island">타 시도 경기장</option></select></label>
+          <label for="gamesScheduleScope"><span>지역</span><select id="gamesScheduleScope" aria-label="경기장 지역으로 일정 거르기"><option value="all">전체 지역</option><option value="jeju">제주 경기장</option><option value="off_island">타 시도 경기장</option></select></label>
+          <label for="gamesScheduleDisability"><span>장애 유형</span><select id="gamesScheduleDisability" aria-label="장애 유형으로 일정 거르기"><option value="all">전체 유형</option><option value="지체">지체</option><option value="시각">시각</option><option value="지적발달">지적·발달</option><option value="청각">청각</option><option value="뇌병변">뇌병변</option></select></label>
         </div>
-        <p class="games-plan-note"><i class="bi bi-exclamation-circle" aria-hidden="true"></i> 참가요강의 경기일정(안) 기준입니다. 공식연습·검사 일정도 함께 표시하며, 변경 공지가 있으면 종목단체 공지가 우선합니다.</p>
+        <p class="games-plan-note"><i class="bi bi-exclamation-circle" aria-hidden="true"></i><span>참가요강의 경기일정(안) 기준입니다. 공식연습·검사 일정도 함께 표시하며, 변경 공지가 있으면 종목단체 공지가 우선합니다.</span><a id="gamesOfficialScheduleLink" href="https://chg.koreanpc.kr/2026MSNPG/gmSchdlRslt/SprtsUnitGmSchdlRslt" target="_blank" rel="noopener noreferrer">공식 일정·결과 <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></p>
         <!-- 달력에서 선택한 날짜가 바뀔 때 스크린리더에 알리는 고정 영역(다시 그려도 사라지지 않게 결과 밖에 둔다) -->
         <p class="games-sr-only" id="gamesScheduleLive" role="status" aria-live="polite"></p>
         <div class="games-schedule-results" id="gamesScheduleResults">
@@ -181,11 +207,12 @@
           <span>공식 정보 확인</span>
           <h2 id="gamesNoticeTitle">일정은 출발 전에 다시 확인하세요</h2>
           <p id="gamesNoticeDetail">종목별 경기단체 공지와 현장 운영 안내가 가장 최신일 수 있습니다.</p>
+          <small id="gamesNoticeMeta"></small>
         </div>
         <div class="games-notice-actions" id="gamesNoticeActions"></div>
       </section>
 
-      <p class="games-safety-note">이 안내는 의료 판단이나 이동·시설 이용 가능성을 보장하지 않습니다. 날씨, 공사, 교통 통제, 경기 운영에 따라 현장 상황이 달라질 수 있습니다.</p>
+      <p class="games-safety-note">이 안내는 의료 판단이나 이동·시설 이용 가능성을 보장하지 않습니다. 날씨, 공사, 교통 통제, 경기 운영에 따라 현장 상황이 달라질 수 있습니다. <a href="para-games-admin.html">운영자 관리</a></p>
     </main>
   </div>
 
@@ -210,7 +237,7 @@
     </div>
   </nav>
 
-  <script src="para-games.js?v=20260828-7"></script>
+  <script src="para-games.js?v=20260828-2"></script>
   <script src="help-chatbot.js?v=20260726-1"></script>
 </body>
 </html>

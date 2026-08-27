@@ -211,9 +211,306 @@
   color: #502626;
 }
 
+.games-live-alert[data-severity="warning"] {
+  border-color: #c27b0a;
+  background: #fff8e8;
+  color: #7a4a00;
+}
+
+.games-live-alert[data-severity="warning"] p {
+  color: #5f471d;
+}
+
+.games-operations-banner {
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 13px;
+  padding: 14px 16px;
+  border: 1px solid #b8ddd4;
+  border-radius: 14px;
+  background: #eff9f6;
+  color: #075d58;
+}
+
+.games-operations-banner[data-kind="warning"] {
+  border-color: #e8cd8d;
+  background: #fff8e8;
+  color: #745006;
+}
+
+.games-operations-banner[data-kind="critical"] {
+  border-color: #e5aaa5;
+  background: #fff1ef;
+  color: #8c2424;
+}
+
+.games-operations-banner > i {
+  font-size: 24px;
+}
+
+.games-operations-banner strong,
+.games-operations-banner span {
+  display: block;
+}
+
+.games-operations-banner span {
+  margin-top: 2px;
+  color: #596271;
+  font-size: 12px;
+}
+
+.games-operations-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, .78fr) minmax(0, 1.5fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.games-incident-panel,
+.games-source-panel {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid #dfe4eb;
+  border-radius: 16px;
+  background: #fbfcfd;
+}
+
+.games-incident-panel > header,
+.games-source-panel > header {
+  min-height: 44px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.games-incident-panel header span,
+.games-source-panel header span {
+  color: #0b7069;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.games-incident-panel h3,
+.games-source-panel h3 {
+  margin: 3px 0 0;
+  font-size: 18px;
+}
+
+.games-incident-panel header b {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #edf1f5;
+  color: #4f5968;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.games-source-panel > header > p {
+  max-width: 380px;
+  margin: 0;
+  color: #667181;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.games-no-incident {
+  min-height: 132px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: center;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 13px;
+  background: #eef8f6;
+  color: #075d58;
+}
+
+.games-no-incident > i {
+  font-size: 24px;
+}
+
+.games-no-incident p {
+  margin: 4px 0 0;
+  color: #596271;
+  font-size: 12px;
+}
+
+.games-incident-card {
+  padding: 15px;
+  border: 1px solid #e5c888;
+  border-left: 4px solid #c27b0a;
+  border-radius: 13px;
+  background: #fffaf0;
+}
+
+.games-incident-card + .games-incident-card {
+  margin-top: 9px;
+}
+
+.games-incident-card[data-severity="critical"] {
+  border-color: #e4aaa5;
+  border-left-color: #a92525;
+  background: #fff4f2;
+}
+
+.games-incident-card[data-severity="info"] {
+  border-color: #aac5e9;
+  border-left-color: #2670bb;
+  background: #f2f7ff;
+}
+
+.games-incident-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.games-incident-head span {
+  color: #855600;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.games-incident-head small {
+  color: #667181;
+  font-size: 10px;
+}
+
+.games-incident-card h4 {
+  margin: 8px 0 0;
+  font-size: 16px;
+}
+
+.games-incident-card p {
+  margin: 7px 0 0;
+  color: #4f5968;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.games-incident-card > strong {
+  display: block;
+  margin-top: 10px;
+  color: #303947;
+  font-size: 11px;
+}
+
+.games-incident-card > a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  color: #003ec7;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.games-source-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.games-source-card {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #dfe4eb;
+  border-radius: 13px;
+  background: #fff;
+}
+
+.games-source-card[data-status="check_required"] {
+  border-color: #e4cc97;
+}
+
+.games-source-card[data-status="unavailable"] {
+  border-color: #e4aaa5;
+  background: #fff7f6;
+}
+
+.games-source-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.games-source-card-head > span {
+  color: #0b7069;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.games-source-card-head b {
+  color: #08745f;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.games-source-card[data-status="check_required"] .games-source-card-head b {
+  color: #8a5c00;
+}
+
+.games-source-card[data-status="unavailable"] .games-source-card-head b {
+  color: #a01f1f;
+}
+
+.games-source-card h4 {
+  margin: 8px 0 0;
+  font-size: 15px;
+}
+
+.games-source-card > p {
+  min-height: 38px;
+  margin: 5px 0 0;
+  color: #596271;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.games-source-card > small,
+.games-source-card > em {
+  display: block;
+}
+
+.games-source-card > small {
+  margin-top: 8px;
+  color: #667181;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.games-source-card > em {
+  margin-top: 5px;
+  color: #7a5a12;
+  font-size: 10px;
+  font-style: normal;
+  line-height: 1.45;
+}
+
+.games-source-card > a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #003ec7;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .games-jump-nav {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
   margin-bottom: 18px;
   padding: 8px;
@@ -470,9 +767,11 @@
   white-space: nowrap;
 }
 
+/* 경기일 드롭다운을 달력으로 대체해 컨트롤이 검색·지역 2개로 줄었다. */
+/* 검색 + 지역 + 장애 유형 3열. 좁아지면 아래 미디어쿼리에서 2열 → 1열로 쌓인다. */
 .games-schedule-controls {
   display: grid;
-  grid-template-columns: minmax(300px, 2.2fr) minmax(160px, 0.7fr);
+  grid-template-columns: minmax(260px, 2.2fr) minmax(150px, 0.7fr) minmax(150px, 0.7fr);
   gap: 10px;
 }
 
@@ -538,6 +837,27 @@
   color: #72510d;
   font-size: 12px;
   line-height: 1.55;
+}
+
+.games-plan-note > span {
+  min-width: 0;
+  flex: 1;
+}
+
+.games-plan-note > a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: -8px -8px -8px 10px;
+  padding: 0 12px;
+  border: 1px solid #d8bd79;
+  border-radius: 999px;
+  background: #fff;
+  color: #684807;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .games-schedule-results {
@@ -779,321 +1099,6 @@
   font-size: 12px;
   font-weight: 700;
   text-decoration: none;
-  white-space: nowrap;
-}
-
-/* ── 월 달력 ─────────────────────────────────────────────────────────── */
-.games-calendar-pane {
-  min-width: 0;
-  display: grid;
-  gap: 16px;
-}
-
-.games-calendar-panel {
-  min-width: 0;
-  padding: 18px;
-  border: 1px solid #dfe4eb;
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 16px 40px rgba(13, 18, 32, 0.06);
-}
-
-.games-calendar-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.games-calendar-nav {
-  width: 40px;
-  height: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #cfd6e0;
-  border-radius: 10px;
-  background: #fff;
-  color: #48525f;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.games-calendar-nav:hover:not(:disabled) {
-  background: #eef2ff;
-  border-color: #003ec7;
-  color: #003ec7;
-}
-
-.games-calendar-nav:focus-visible {
-  outline: 3px solid #003ec7;
-  outline-offset: 2px;
-}
-
-.games-calendar-nav:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.games-calendar-title {
-  margin: 0;
-  color: #111318;
-  font-size: 20px;
-  font-weight: 800;
-}
-
-.games-calendar-pre {
-  margin-left: auto;
-  min-height: 40px;
-  padding: 0 14px;
-  border: 1px solid #b6e5dd;
-  border-radius: 999px;
-  background: #e1f7f3;
-  color: #0b6c64;
-  font-size: 12.5px;
-  font-weight: 700;
-  text-align: left;
-  cursor: pointer;
-}
-
-.games-calendar-pre:hover {
-  background: #cdf0ea;
-}
-
-.games-calendar-pre:focus-visible {
-  outline: 3px solid #003ec7;
-  outline-offset: 2px;
-}
-
-.games-calendar-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.games-calendar-weekdays span {
-  color: #596271;
-  font-size: 12px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.games-calendar-weekdays .is-sunday,
-.games-cal-cell.is-sunday .games-cal-day {
-  color: #c0392b;
-}
-
-.games-calendar-weekdays .is-saturday,
-.games-cal-cell.is-saturday .games-cal-day {
-  color: #0059a6;
-}
-
-.games-calendar-grid {
-  display: grid;
-  gap: 8px;
-}
-
-.games-cal-row {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.games-cal-cell {
-  min-width: 0;
-  min-height: 148px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 7px 8px;
-  border: 1px solid #eef0f2;
-  border-radius: 11px;
-  background: #fafbfc;
-  font: inherit;
-  text-align: left;
-  overflow: hidden;
-}
-
-.games-cal-cell.is-pad {
-  border: 0;
-  background: transparent;
-}
-
-.games-cal-cell.is-active {
-  border-color: #dfe4ee;
-  background: #fff;
-  cursor: pointer;
-}
-
-.games-cal-cell.is-active:hover {
-  border-color: #003ec7;
-  background: #f7f9ff;
-}
-
-.games-cal-cell.is-active:focus-visible {
-  outline: 3px solid #003ec7;
-  outline-offset: 2px;
-}
-
-.games-cal-cell.is-selected {
-  border: 2px solid #003ec7;
-  box-shadow: 0 0 0 3px #dde1ff;
-}
-
-/* 좌측에서 고른 종목의 경기일 표시(양방향 연동) */
-.games-cal-cell.is-sport-hit {
-  background: #f2f6ff;
-  box-shadow: inset 0 3px 0 #fdd400;
-}
-
-.games-cal-cell.is-empty .games-cal-day {
-  color: #b7bdc9;
-}
-
-.games-cal-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-}
-
-.games-cal-day {
-  color: #111318;
-  font-size: 14px;
-  font-weight: 800;
-}
-
-.games-cal-count {
-  padding: 1px 8px;
-  border-radius: 999px;
-  background: #eef2ff;
-  color: #003ec7;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.games-cal-chips {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  overflow: hidden;
-}
-
-.games-cal-chip {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 3px 7px;
-  border-left: 3px solid #003ec7;
-  border-radius: 6px;
-  background: #f4f6fb;
-}
-
-.games-cal-chip.is-off-island {
-  border-left-color: #128c83;
-  background: #eefaf7;
-}
-
-.games-cal-chip b {
-  overflow: hidden;
-  color: #202631;
-  font-size: 11.5px;
-  font-weight: 700;
-  line-height: 1.25;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.games-cal-chip small {
-  overflow: hidden;
-  color: #7b8493;
-  font-size: 10px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.games-cal-more {
-  color: #003ec7;
-  font-size: 10.5px;
-  font-weight: 800;
-}
-
-.games-calendar-legend {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14px;
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid #eef0f5;
-  color: #596271;
-  font-size: 11.5px;
-}
-
-.games-calendar-legend small {
-  margin-left: auto;
-  color: #7b8493;
-  font-size: 11.5px;
-}
-
-.games-legend-dot {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  margin-right: 5px;
-  border-radius: 3px;
-  vertical-align: middle;
-}
-
-.games-legend-dot.is-jeju {
-  background: #003ec7;
-}
-
-.games-legend-dot.is-off-island {
-  background: #128c83;
-}
-
-.games-legend-dot.is-selected {
-  background: #dde1ff;
-  box-shadow: inset 0 0 0 1px #003ec7;
-}
-
-/* 선택한 날짜의 전체 경기 목록 */
-.games-day-panel {
-  min-width: 0;
-  padding: 18px 20px;
-  border: 1px solid #dfe4eb;
-  border-radius: 16px;
-  background: #fff;
-}
-
-.games-day-panel-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e8ebf0;
-}
-
-.games-day-panel-head h3 {
-  margin: 0;
-  color: #111318;
-  font-size: 20px;
-}
-
-.games-day-panel-head h3 span {
-  color: #596271;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.games-day-panel-head strong {
-  color: #0b6c64;
-  font-size: 13px;
-  font-weight: 800;
   white-space: nowrap;
 }
 
@@ -1609,6 +1614,13 @@
   color: #596271;
 }
 
+.games-official-notice small {
+  display: block;
+  margin-top: 7px;
+  color: #667181;
+  font-size: 11px;
+}
+
 .games-notice-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1644,7 +1656,8 @@
   }
 
   .games-hero,
-  .games-workspace {
+  .games-workspace,
+  .games-operations-layout {
     grid-template-columns: 1fr;
   }
 
@@ -1673,6 +1686,16 @@
 
   .games-schedule-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .games-source-panel > header {
+    display: block;
+  }
+
+  .games-source-panel > header > p {
+    max-width: none;
+    margin-top: 6px;
+    text-align: left;
   }
 
   .games-schedule-actions {
@@ -1784,6 +1807,15 @@
     grid-column: auto;
   }
 
+  .games-plan-note {
+    flex-wrap: wrap;
+  }
+
+  .games-plan-note > a {
+    width: 100%;
+    margin: 4px 0 0;
+  }
+
   .games-sport-select {
     display: block;
   }
@@ -1827,7 +1859,8 @@
   .games-venue-list,
   .games-venue-facts,
   .games-access-grid,
-  .games-facility-list {
+  .games-facility-list,
+  .games-source-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1874,97 +1907,9 @@
       "brand"
       "nav";
   }
-
-  .para-games-page {
-    font-size: 16px;
-    line-height: 1.6;
-  }
-
-  .para-games-page .nav-tabs {
-    gap: 20px;
-    scroll-padding-inline: 2px;
-  }
-
-  .para-games-page .games-main :where(p, li, dd, dt, small) {
-    font-size: 14px;
-    line-height: 1.65;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-
-  .para-games-page .games-main :where(span, time) {
-    font-size: 13px;
-    line-height: 1.55;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-
-  .para-games-page .games-main :where(a, button) {
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .games-main :where(h1, h2, h3, strong) {
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-
-  .games-hero h1 {
-    font-size: clamp(32px, 10vw, 38px);
-    line-height: 1.16;
-    letter-spacing: -0.035em;
-  }
-
-  .games-hero-copy > p {
-    font-size: 15px;
-    line-height: 1.7;
-  }
-
-  .games-event-facts span,
-  .games-jump-nav a,
-  .games-detail-actions a,
-  .games-schedule-actions a,
-  .games-contact-actions a {
-    min-height: 44px;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .games-coverage-note > span,
-  .games-block-head > div > span,
-  .games-schedule-controls label > span,
-  .games-schedule-division small,
-  .games-schedule-date small,
-  .games-schedule-venue span,
-  .games-venue-button span,
-  .games-venue-button small,
-  .games-venue-facts dt,
-  .games-contact-card > span,
-  .games-contact-source {
-    font-size: 13px;
-    line-height: 1.55;
-  }
-
-  .games-today h2,
-  .games-block-head h2,
-  .games-venue-panel h2,
-  .games-official-notice h2,
-  .games-detail-head h2 {
-    line-height: 1.28;
-    letter-spacing: -0.025em;
-  }
-
-  .games-coverage-note > span {
-    white-space: normal;
-  }
-
-  .games-official-notice a,
-  .games-contact-source a {
-    overflow-wrap: anywhere;
-  }
 }
 
-/* ===== P0 개선: 내 종목 찾기 · 경기 시각 안내 · 하단 고정바 ===== */
+/* ===== P0 개선 + 달력 개편(가치봄 이식) ===== */
 
 /* 스크린리더 전용 보조 설명 (화면에는 보이지 않음) */
 .games-sr-only {
@@ -2102,6 +2047,321 @@
   color: #024b9a;
   font-weight: 700;
   text-decoration: underline;
+}
+
+/* ── 월 달력 ─────────────────────────────────────────────────────────── */
+.games-calendar-pane {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.games-calendar-panel {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid #dfe4eb;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(13, 18, 32, 0.06);
+}
+
+.games-calendar-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.games-calendar-nav {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #cfd6e0;
+  border-radius: 10px;
+  background: #fff;
+  color: #48525f;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.games-calendar-nav:hover:not(:disabled) {
+  background: #eef2ff;
+  border-color: #003ec7;
+  color: #003ec7;
+}
+
+.games-calendar-nav:focus-visible {
+  outline: 3px solid #003ec7;
+  outline-offset: 2px;
+}
+
+.games-calendar-nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.games-calendar-title {
+  margin: 0;
+  color: #111318;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.games-calendar-pre {
+  margin-left: auto;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid #b6e5dd;
+  border-radius: 999px;
+  background: #e1f7f3;
+  color: #0b6c64;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.games-calendar-pre:hover {
+  background: #cdf0ea;
+}
+
+.games-calendar-pre:focus-visible {
+  outline: 3px solid #003ec7;
+  outline-offset: 2px;
+}
+
+.games-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.games-calendar-weekdays span {
+  color: #596271;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.games-calendar-weekdays .is-sunday,
+.games-cal-cell.is-sunday .games-cal-day {
+  color: #c0392b;
+}
+
+.games-calendar-weekdays .is-saturday,
+.games-cal-cell.is-saturday .games-cal-day {
+  color: #0059a6;
+}
+
+.games-calendar-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.games-cal-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.games-cal-cell {
+  min-width: 0;
+  min-height: 148px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 7px 8px;
+  border: 1px solid #eef0f2;
+  border-radius: 11px;
+  background: #fafbfc;
+  font: inherit;
+  text-align: left;
+  overflow: hidden;
+}
+
+.games-cal-cell.is-pad {
+  border: 0;
+  background: transparent;
+}
+
+.games-cal-cell.is-active {
+  border-color: #dfe4ee;
+  background: #fff;
+  cursor: pointer;
+}
+
+.games-cal-cell.is-active:hover {
+  border-color: #003ec7;
+  background: #f7f9ff;
+}
+
+.games-cal-cell.is-active:focus-visible {
+  outline: 3px solid #003ec7;
+  outline-offset: 2px;
+}
+
+.games-cal-cell.is-selected {
+  border: 2px solid #003ec7;
+  box-shadow: 0 0 0 3px #dde1ff;
+}
+
+/* 좌측에서 고른 종목의 경기일 표시(양방향 연동) */
+.games-cal-cell.is-sport-hit {
+  background: #f2f6ff;
+  box-shadow: inset 0 3px 0 #fdd400;
+}
+
+.games-cal-cell.is-empty .games-cal-day {
+  color: #b7bdc9;
+}
+
+.games-cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.games-cal-day {
+  color: #111318;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.games-cal-count {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #003ec7;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.games-cal-chips {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.games-cal-chip {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 3px 7px;
+  border-left: 3px solid #003ec7;
+  border-radius: 6px;
+  background: #f4f6fb;
+}
+
+.games-cal-chip.is-off-island {
+  border-left-color: #128c83;
+  background: #eefaf7;
+}
+
+.games-cal-chip b {
+  overflow: hidden;
+  color: #202631;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.games-cal-chip small {
+  overflow: hidden;
+  color: #7b8493;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.games-cal-more {
+  color: #003ec7;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+
+.games-calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #eef0f5;
+  color: #596271;
+  font-size: 11.5px;
+}
+
+.games-calendar-legend small {
+  margin-left: auto;
+  color: #7b8493;
+  font-size: 11.5px;
+}
+
+.games-legend-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 5px;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+.games-legend-dot.is-jeju {
+  background: #003ec7;
+}
+
+.games-legend-dot.is-off-island {
+  background: #128c83;
+}
+
+.games-legend-dot.is-selected {
+  background: #dde1ff;
+  box-shadow: inset 0 0 0 1px #003ec7;
+}
+
+/* 선택한 날짜의 전체 경기 목록 */
+.games-day-panel {
+  min-width: 0;
+  padding: 18px 20px;
+  border: 1px solid #dfe4eb;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.games-day-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e8ebf0;
+}
+
+.games-day-panel-head h3 {
+  margin: 0;
+  color: #111318;
+  font-size: 20px;
+}
+
+.games-day-panel-head h3 span {
+  color: #596271;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.games-day-panel-head strong {
+  color: #0b6c64;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 /* --- 하단 고정바 --- */

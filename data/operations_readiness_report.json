@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-25",
+  "generated_at": "2026-07-09",
   "criteria": {
     "ready_for_full_service": "자동 점검에서 blocker가 없고 외부 데이터 의존성이 해소된 상태",
     "ready_with_warnings": "서비스 제한 공개는 가능하지만 운영 보강 warning이 남은 상태",
@@ -7,27 +7,26 @@
   },
   "overall_status": "blocked_for_full_service",
   "summary": {
-    "total_checks": 18,
-    "passed_checks": 11,
-    "warning_checks": 2,
-    "blocker_checks": 5,
+    "total_checks": 15,
+    "passed_checks": 12,
+    "warning_checks": 0,
+    "blocker_checks": 3,
     "by_status": {
-      "pass": 11,
-      "block": 5,
-      "warn": 2
+      "pass": 12,
+      "block": 3
     },
-    "next_action": "안전 메모가 없는 장소를 보강"
+    "next_action": "누락 원본 이미지 복구 또는 대체 원본 수령을 제공기관에 요청"
   },
   "sections": [
     {
       "name": "base_place_catalog",
-      "status": "block",
+      "status": "pass",
       "checks": [
         {
           "check_id": "place_catalog_minimum_count",
           "status": "pass",
           "severity": "blocker",
-          "actual": "278 cards",
+          "actual": "43 cards",
           "expected": ">= 30 cards",
           "detail": "제한 공개에 필요한 최소 장소 카드 수",
           "next_action": "공식 출처 기반 장소 카드를 추가 수집"
@@ -36,70 +35,37 @@
           "check_id": "place_catalog_source_coverage",
           "status": "pass",
           "severity": "blocker",
-          "actual": "278/278",
+          "actual": "43/43",
           "expected": "100%",
           "detail": "모든 장소 카드의 출처 보유 여부",
           "next_action": "출처 없는 장소는 hidden 처리하거나 공식 출처를 보강"
         },
         {
           "check_id": "place_catalog_safety_notes",
-          "status": "block",
+          "status": "pass",
           "severity": "blocker",
-          "actual": "104/278",
+          "actual": "43/43",
           "expected": "100%",
           "detail": "방문 전 주의사항과 안전 메모 보유 여부",
           "next_action": "안전 메모가 없는 장소를 보강"
         },
         {
           "check_id": "place_catalog_verified_or_partial_ratio",
-          "status": "block",
+          "status": "pass",
           "severity": "blocker",
-          "actual": "66.5%",
+          "actual": "81.4%",
           "expected": ">= 70%",
           "detail": "verified 또는 partial 장소 비율",
           "next_action": "needs_check 장소의 공식 출처와 접근성 필드를 보강"
         },
         {
           "check_id": "place_catalog_active_visibility",
-          "status": "warn",
+          "status": "pass",
           "severity": "warning",
-          "actual": "270/278",
+          "actual": "43/43",
           "expected": "primary catalog all active",
           "detail": "기본 장소 카탈로그 노출 상태",
           "next_action": "hidden 또는 blocked 장소가 사용자 결과에 노출되지 않는지 확인"
-        }
-      ]
-    },
-    {
-      "name": "coordinate_validation",
-      "status": "warn",
-      "checks": [
-        {
-          "check_id": "coordinate_validation_coverage",
-          "status": "pass",
-          "severity": "blocker",
-          "actual": "278/278",
-          "expected": "100%",
-          "detail": "전체 장소의 좌표 교차검증 결과가 앱 seed에 연결됐는지 확인",
-          "next_action": "좌표 교차검증 데이터를 반영해 앱 seed를 다시 생성"
-        },
-        {
-          "check_id": "coordinate_review_auto_recommendation_gate",
-          "status": "pass",
-          "severity": "blocker",
-          "actual": "0곳 자동 추천 가능",
-          "expected": "0곳",
-          "detail": "사람 좌표 재검토가 필요한 장소의 자동 추천 차단 여부",
-          "next_action": "재검토 장소를 자동 추천에서 제외하고 사람 확인 후 다시 승격"
-        },
-        {
-          "check_id": "coordinate_human_review_queue",
-          "status": "warn",
-          "severity": "warning",
-          "actual": "19곳",
-          "expected": "0곳",
-          "detail": "좌표·입구·지점 기준을 사람이 최종 확인해야 하는 장소 수",
-          "next_action": "고우선 7곳부터 주소·입구·주차장 기준점을 직접 확인"
         }
       ]
     },
@@ -111,7 +77,7 @@
           "check_id": "public_data_ready_sources",
           "status": "pass",
           "severity": "warning",
-          "actual": "4/5",
+          "actual": "3/4",
           "expected": "downloaded public datasets ready",
           "detail": "다운로드형 공공데이터 로컬 산출물 준비 여부",
           "next_action": "원본 CSV와 변환 JSON 산출물을 재생성"
@@ -214,24 +180,6 @@
   ],
   "blockers": [
     {
-      "check_id": "place_catalog_safety_notes",
-      "status": "block",
-      "severity": "blocker",
-      "actual": "104/278",
-      "expected": "100%",
-      "detail": "방문 전 주의사항과 안전 메모 보유 여부",
-      "next_action": "안전 메모가 없는 장소를 보강"
-    },
-    {
-      "check_id": "place_catalog_verified_or_partial_ratio",
-      "status": "block",
-      "severity": "blocker",
-      "actual": "66.5%",
-      "expected": ">= 70%",
-      "detail": "verified 또는 partial 장소 비율",
-      "next_action": "needs_check 장소의 공식 출처와 접근성 필드를 보강"
-    },
-    {
       "check_id": "roadview_image_request_submission",
       "status": "block",
       "severity": "blocker",
@@ -259,33 +207,10 @@
       "next_action": "로드뷰 이미지 검수 완료 후 활성 후보 산출 재실행"
     }
   ],
-  "warnings": [
-    {
-      "check_id": "place_catalog_active_visibility",
-      "status": "warn",
-      "severity": "warning",
-      "actual": "270/278",
-      "expected": "primary catalog all active",
-      "detail": "기본 장소 카탈로그 노출 상태",
-      "next_action": "hidden 또는 blocked 장소가 사용자 결과에 노출되지 않는지 확인"
-    },
-    {
-      "check_id": "coordinate_human_review_queue",
-      "status": "warn",
-      "severity": "warning",
-      "actual": "19곳",
-      "expected": "0곳",
-      "detail": "좌표·입구·지점 기준을 사람이 최종 확인해야 하는 장소 수",
-      "next_action": "고우선 7곳부터 주소·입구·주차장 기준점을 직접 확인"
-    }
-  ],
+  "warnings": [],
   "next_actions": [
-    "안전 메모가 없는 장소를 보강",
-    "needs_check 장소의 공식 출처와 접근성 필드를 보강",
     "누락 원본 이미지 복구 또는 대체 원본 수령을 제공기관에 요청",
     "누락 원본 이미지 복구 또는 대체 원본 수령 후 data/raw/roadview_images에 배치",
-    "로드뷰 이미지 검수 완료 후 활성 후보 산출 재실행",
-    "hidden 또는 blocked 장소가 사용자 결과에 노출되지 않는지 확인",
-    "고우선 7곳부터 주소·입구·주차장 기준점을 직접 확인"
+    "로드뷰 이미지 검수 완료 후 활성 후보 산출 재실행"
   ]
 }

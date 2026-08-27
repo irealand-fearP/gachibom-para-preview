@@ -608,6 +608,16 @@
   overflow: hidden;
 }
 
+.helpbot[data-mode="wing"] .helpbot-head-brand {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.helpbot[data-mode="wing"].is-dragging .helpbot-head-brand {
+  cursor: grabbing;
+}
+
 .helpbot-head-avatar {
   width: 44px;
   height: 44px;
@@ -656,24 +666,6 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-}
-
-.helpbot-drag-handle {
-  min-height: 38px;
-  padding: 0 11px;
-  border: 1px solid #cfd9e6;
-  border-radius: 8px;
-  background: #f8fbff;
-  color: #415166;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: grab;
-  touch-action: none;
-}
-
-.helpbot-drag-handle:active,
-.helpbot[data-mode="wing"].is-dragging .helpbot-drag-handle {
-  cursor: grabbing;
 }
 
 .helpbot[data-mode="wing"].is-dragging {
@@ -1011,8 +1003,7 @@
 
 .helpbot-action-button:hover,
 .helpbot-followups button:hover,
-.helpbot-chip:hover,
-.helpbot-drag-handle:hover {
+.helpbot-chip:hover {
   transform: translateY(-1px);
 }
 
@@ -1723,10 +1714,6 @@
     gap: 6px;
   }
 
-  .helpbot-drag-handle {
-    display: none;
-  }
-
   .helpbot-reset {
     padding: 0 8px;
     font-size: 12px;
@@ -1774,45 +1761,5 @@
   .helpbot-nearby-actions a,
   .helpbot-location-actions button {
     width: 100%;
-  }
-}
-
-@media (max-width: 560px) {
-  .helpbot-reset,
-  .helpbot-close,
-  .helpbot-quick-toggle,
-  .helpbot-chip,
-  .helpbot-submit,
-  .helpbot-presence-dismiss {
-    min-width: 44px;
-    min-height: 44px;
-  }
-
-  .helpbot :where(p, li, dd, dt, small) {
-    font-size: 14px !important;
-    line-height: 1.6;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-
-  .helpbot-message,
-  .helpbot-chip,
-  .helpbot-action-button,
-  .helpbot-followups button,
-  .helpbot-nearby-actions a,
-  .helpbot-location-actions button,
-  .helpbot-submit {
-    font-size: 14px !important;
-    line-height: 1.5;
-  }
-
-  .helpbot-head-copy span,
-  .helpbot-reset,
-  .helpbot-quick-toggle,
-  .helpbot-confidence,
-  .helpbot-safe-note,
-  .helpbot-checklist {
-    font-size: 13px !important;
-    line-height: 1.55;
   }
 }

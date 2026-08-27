@@ -17,27 +17,6 @@ python scripts/serve_recommendation_api.py --port 8790 --generated-at 2026-07-09
 
 브라우저에서 실행한 포트 주소를 연다. 예: `http://127.0.0.1:8792/`
 
-## 휴대폰에서 실행·설치
-
-여러 사람이 바로 사용할 공개 버전은 아래 HTTPS 주소에서 제공한다.
-
-- 앱: `https://gachibom-jeju-team.nenae16.chatgpt.site/app/`
-- 설치 안내: `https://gachibom-jeju-team.nenae16.chatgpt.site/app/install.html`
-- 개인정보 처리방침: `https://gachibom-jeju-team.nenae16.chatgpt.site/app/privacy.html`
-
-Android용 Google Play 패키지 프로젝트는 `android/`에 있다. Play 등록 전에는 개발자 계정, 사용자가 보관할 업로드 서명키, Play App Signing 인증서 지문을 준비하고 공개 사이트에 Digital Asset Links를 연결해야 한다.
-
-같은 Wi-Fi에 연결된 휴대폰으로 개발 중인 화면을 확인하려면 서버를 모든 로컬 주소에 열고 PC의 IPv4 주소로 접속한다.
-
-```powershell
-python scripts/serve_recommendation_api.py --host 0.0.0.0 --port 8790 --generated-at 2026-08-25
-ipconfig
-```
-
-휴대폰 브라우저에서 `http://<PC의 IPv4 주소>:8790/`을 연다. Windows 방화벽에서 Python의 개인 네트워크 접근 허용이 필요할 수 있다.
-
-홈 화면 앱 설치와 오프라인 앱 셸은 `manifest.webmanifest`와 `service-worker.js`로 제공한다. 로컬 네트워크의 일반 HTTP 주소에서는 브라우저 보안 정책상 설치 기능이 제한될 수 있으므로, 실제 설치 검증은 Vercel 등 HTTPS 주소에서 수행한다. Android의 지원 브라우저에서는 상단의 `앱 설치` 버튼 또는 브라우저 메뉴를 사용하고, iPhone에서는 Safari 공유 메뉴의 `홈 화면에 추가`를 사용한다.
-
 `OPENAI_API_KEY`가 없으면 API는 정상 동작하되 AI 설명만 생략하고 로컬 점수 근거를 사용한다. 화면에는 API 연결, AI 키 없음, 실패 후 정적 전환 상태가 별도로 표시된다.
 
 `KAKAO_MOBILITY_REST_API_KEY`는 브라우저로 전달하지 않는 서버 전용 값이다. 설정하면 서버 경로 API가 카카오모빌리티 길찾기를 우선 사용하고, 키가 없거나 카카오 호출이 실패하거나 경유지를 포함해 8지점인 경로는 공개 OSRM으로 자동 대체한다.

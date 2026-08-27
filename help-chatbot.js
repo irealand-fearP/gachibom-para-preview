@@ -1845,12 +1845,10 @@
     titleBlock.appendChild(createElement("span", "", "사용 안내 · 주변 시설 찾기"));
     headBrand.appendChild(headAvatar);
     headBrand.appendChild(titleBlock);
+    headBrand.title = "위아래로 드래그해 창 이동";
     const headActions = createElement("div", "helpbot-head-actions");
-    const dragHandle = createElement("span", "helpbot-drag-handle", "창 이동");
-    dragHandle.setAttribute("aria-hidden", "true");
     const resetButton = createElement("button", "helpbot-reset", "새 대화");
     resetButton.type = "button";
-    headActions.appendChild(dragHandle);
     headActions.appendChild(resetButton);
 
     let closeButton = null;
@@ -1959,7 +1957,7 @@
     }
 
     installInteractionGuards(shell, log);
-    installDraggable(shell, dragHandle, {
+    installDraggable(shell, headBrand, {
       positionRoot: wingWrap,
       wingButton,
     });

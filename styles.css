@@ -40,7 +40,6 @@
 
 html {
   min-width: 320px;
-  overscroll-behavior-y: none;
 }
 
 body {
@@ -63,15 +62,6 @@ textarea {
 button {
   border: 0;
   cursor: pointer;
-}
-
-button,
-a,
-input,
-select,
-textarea {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: rgba(0, 62, 199, 0.14);
 }
 
 button:focus-visible,
@@ -398,6 +388,57 @@ body.journey-in-view .top-save-route-button {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
 }
 
+.games-entry {
+  min-height: 112px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  margin: 18px var(--page-inline-gutter) 0;
+  padding: 20px 24px;
+  border: 1px solid #cfdcf2;
+  border-radius: 18px;
+  background: linear-gradient(115deg, #eef3ff, #ecfaf6);
+}
+
+.games-entry > div > span {
+  color: #0b7069;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.games-entry h2 {
+  margin: 3px 0 2px;
+  font-size: 23px;
+  line-height: 1.2;
+}
+
+.games-entry p {
+  margin: 0;
+  color: #596271;
+  font-size: 13px;
+}
+
+.games-entry-action {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.games-entry-action small {
+  color: #596271;
+  white-space: nowrap;
+}
+
+.games-entry-action a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px;
+  text-decoration: none;
+}
+
 .concept-page,
 .journey-layout {
   scroll-margin-top: 86px;
@@ -407,7 +448,7 @@ body.journey-in-view .top-save-route-button {
   --concept-stage-height: clamp(680px, calc(100vh - 72px - 88px), 850px);
   --concept-inline-start: clamp(16px, 1.218vw, 25px);
   --concept-inline-end: clamp(20px, 1.718vw, 35px);
-  min-height: calc(100vh - 72px);
+  min-height: auto;
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -445,7 +486,7 @@ body.concept-result-open .concept-page::after {
 .concept-main {
   min-width: 0;
   width: 100%;
-  min-height: var(--concept-stage-height);
+  min-height: 0;
   display: grid;
   grid-template-rows: auto auto auto minmax(0, 1fr);
   align-content: stretch;
@@ -681,7 +722,6 @@ body.concept-result-open .concept-card.active:hover {
 
 .concept-card small {
   min-height: 0;
-  flex: 0 0 auto;
   margin-top: clamp(12px, 0.83vw, 17px);
   color: #344254;
   font-size: clamp(15px, 0.91vw, 19px);
@@ -744,7 +784,6 @@ body.concept-result-open .concept-card.active:hover {
 
 .concept-card-score-row {
   min-width: 0;
-  flex: 0 0 auto;
   display: flex;
   align-items: center;
   gap: clamp(10px, 0.61vw, 13px);
@@ -791,7 +830,6 @@ body.concept-result-open .concept-card.active:hover {
 }
 
 .concept-card-submeta {
-  flex: 0 0 auto;
   color: #637083;
   margin-top: -2px;
   padding-left: clamp(39px, 2.326vw, 48px);
@@ -4706,55 +4744,6 @@ body.saved-routes-modal-open .helpbot-wing-wrap {
   font-weight: 700;
 }
 
-.location-validation-alert {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  margin: 10px 0 0;
-  padding: 11px 12px;
-  border: 1px solid #efb9a7;
-  border-radius: 13px;
-  background: #fff4ef;
-  color: #71331f;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.location-validation-alert.contextual {
-  border-color: #b8d9ec;
-  background: #f2f9fd;
-  color: #244e67;
-}
-
-.location-validation-alert > i {
-  flex: 0 0 auto;
-  margin-top: 2px;
-}
-
-.location-validation-alert span {
-  display: grid;
-  gap: 3px;
-  min-width: 0;
-}
-
-.location-validation-alert strong,
-.location-validation-alert small {
-  display: block;
-}
-
-.location-validation-alert small {
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.location-validation-alert a {
-  width: fit-content;
-  color: inherit;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
 .saved-route-place-copy b {
   color: #263342;
   font-size: 14px;
@@ -6226,7 +6215,7 @@ body.ai-explanation-modal-open .helpbot-wing-wrap {
   .concept-page {
     --concept-stage-height: clamp(620px, calc(100vh - 72px - 72px), 760px);
     gap: 18px;
-    padding: clamp(28px, 4vh, 42px) var(--page-inline-gutter);
+    padding: clamp(28px, 4vh, 42px) var(--page-inline-gutter) 20px;
   }
 
   body.concept-result-open .concept-page {
@@ -6340,11 +6329,6 @@ body.ai-explanation-modal-open .helpbot-wing-wrap {
 
   .concept-result-panel {
     grid-template-rows: auto auto minmax(0, 1fr) auto;
-  }
-
-  .concept-card-visual {
-    height: clamp(190px, 32vh, 230px);
-    min-height: 0;
   }
 
   .concept-result-header {
@@ -6693,8 +6677,7 @@ body.ai-explanation-modal-open .helpbot-wing-wrap {
 @media (max-width: 560px) {
   .app-shell {
     --page-inline-gutter: 14px;
-    min-height: 100dvh;
-    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+    padding-bottom: 76px;
   }
 
   .topbar {
@@ -6703,9 +6686,7 @@ body.ai-explanation-modal-open .helpbot-wing-wrap {
       "brand actions"
       "nav nav";
     gap: 6px 8px;
-    height: auto;
-    min-height: calc(102px + env(safe-area-inset-top));
-    padding: calc(8px + env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) 0 max(14px, env(safe-area-inset-left));
+    padding: 8px 14px 0;
   }
 
   .brand {
@@ -6757,8 +6738,7 @@ body.ai-explanation-modal-open .helpbot-wing-wrap {
     display: none;
   }
 
-  .top-actions button,
-  .top-actions .pwa-install-guide {
+  .top-actions button {
     width: 44px;
     height: 44px;
     flex: 0 0 auto;
@@ -6770,14 +6750,6 @@ body.ai-explanation-modal-open .helpbot-wing-wrap {
     font-size: 18px;
   }
 
-  .top-actions .pwa-install-guide {
-    min-height: 44px;
-  }
-
-  .pwa-install-button[hidden] {
-    display: none !important;
-  }
-
   .top-actions .top-save-route-button {
     display: none;
   }
@@ -6786,8 +6758,7 @@ body.ai-explanation-modal-open .helpbot-wing-wrap {
     display: inline-grid;
   }
 
-  .top-actions button > span,
-  .top-actions .pwa-install-guide > span {
+  .top-actions button > span {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -6797,6 +6768,24 @@ body.ai-explanation-modal-open .helpbot-wing-wrap {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+
+  .games-entry {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 17px;
+  }
+
+  .games-entry-action {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .games-entry-action a {
+    width: 100%;
+    justify-content: center;
   }
 
   .saved-routes-button b {
@@ -6827,8 +6816,8 @@ body.ai-explanation-modal-open .helpbot-wing-wrap {
   }
 
   .site-intro-panel {
-    height: min(78dvh, 720px);
-    max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    height: min(78vh, 720px);
+    max-height: calc(100vh - 24px);
     border-radius: 18px;
     aspect-ratio: auto;
   }
@@ -7658,177 +7647,5 @@ body.ai-explanation-modal-open .helpbot-wing-wrap {
   .accessibility-report-foot button {
     width: 100%;
     padding-inline: 12px;
-  }
-
-  input,
-  select,
-  textarea {
-    font-size: 16px !important;
-  }
-
-  .detail-photo small a,
-  .image-credit a,
-  .grounded-source a,
-  .source-box a {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-  }
-}
-
-@media (max-width: 350px) {
-  .topbar {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "brand"
-      "actions"
-      "nav";
-    min-height: calc(150px + env(safe-area-inset-top));
-  }
-
-  .brand,
-  .top-actions {
-    width: 100%;
-  }
-
-  .top-actions {
-    justify-content: space-between;
-  }
-}
-
-/* Mobile readability pass: keep Korean text legible and prevent awkward syllable wrapping. */
-@media (max-width: 560px) {
-  html {
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-  }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .brand-copy span {
-    font-size: 13px;
-    line-height: 1.35;
-  }
-
-  .nav-tabs {
-    justify-content: flex-start;
-    gap: 20px;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    scroll-padding-inline: 2px;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .nav-tabs a {
-    flex: 0 0 auto;
-    padding-inline: 1px;
-    font-size: 13px;
-    line-height: 1.35;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  .concept-main h1 {
-    font-family: inherit;
-    font-size: clamp(29px, 8.8vw, 34px);
-    line-height: 1.22;
-    letter-spacing: -0.035em;
-    word-break: keep-all;
-    overflow-wrap: normal;
-  }
-
-  .concept-main p,
-  .concept-result-heading p,
-  .concept-preference-sentences p {
-    font-size: 15px;
-    line-height: 1.65;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-
-  .concept-card strong {
-    font-size: 19px;
-    line-height: 1.35;
-    word-break: keep-all;
-  }
-
-  .concept-card small {
-    font-size: 14px;
-    line-height: 1.55;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-
-  .journey-layout :where(p, li, dd, dt, small),
-  .concept-result-panel :where(p, li, dd, dt, small) {
-    font-size: 13px;
-    line-height: 1.6;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-
-  .journey-layout :where(p, li, dd, dt, small, em, summary, a, button),
-  .journey-layout button span,
-  .journey-layout small b {
-    font-size: 13px !important;
-    line-height: 1.55;
-  }
-
-  .concept-result-panel :where(p, li, dd, dt, small, em, summary),
-  .concept-result-panel :where(button, a),
-  .journey-condition-heading span,
-  .match-course :where(b, small),
-  .journey-safety-note span,
-  .rag-process-header :where(span, b),
-  .rag-process-onboarding :where(strong, span),
-  .map-place-card small b {
-    font-size: 13px !important;
-    line-height: 1.55;
-  }
-
-  .map-place-card strong,
-  .detail-card h3,
-  .visit-info-card h3 {
-    font-size: 15px;
-    line-height: 1.45;
-    word-break: keep-all;
-  }
-
-  .detail-card :where(span, b, strong),
-  .detail-card :where(.bar-row, .score-trace-row),
-  .image-credit strong,
-  .route-cta-button b,
-  .validation-status,
-  .validation-source-grid :where(span, b),
-  .detail-meta :where(span, b) {
-    font-size: 13px !important;
-    line-height: 1.55;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-
-  .concept-actions button,
-  .live-map-button,
-  .saved-route-place-actions button,
-  .saved-route-place-actions a,
-  .saved-route-place-unavailable {
-    font-size: 13px;
-    line-height: 1.4;
-  }
-
-  .detail-photo small a,
-  .image-credit a,
-  .grounded-source a,
-  .source-box a {
-    max-width: 100%;
-    white-space: normal;
-    word-break: keep-all;
-    overflow-wrap: anywhere;
   }
 }

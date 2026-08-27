@@ -91,10 +91,11 @@ let siteIntroStarted = false;
 const centerMapLayerDefinitions = {
   soft: {
     label: "부드러운 지도",
-    url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     options: {
       maxZoom: 19,
-      attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
+      opacity: 0.62,
+      attribution: "&copy; OpenStreetMap contributors"
     }
   },
   standard: {
@@ -954,35 +955,19 @@ function staticPlacesById() {
     });
   });
   (state.data?.saved_route_places || []).forEach((place) => {
-    if (place?.spot_id && place?.name && places.has(place.spot_id)) {
-      places.set(place.spot_id, {
-        ...places.get(place.spot_id),
-        external_validation: places.get(place.spot_id)?.external_validation || place.external_validation || null
-      });
-    } else if (place?.spot_id && place?.name) {
+    if (place?.spot_id && place?.name && !places.has(place.spot_id)) {
       places.set(place.spot_id, {
         spot_id: place.spot_id,
         name: place.name,
         region: place.region || "제주",
         category: place.category || "other",
-        summary: place.summary || "",
-        effort: place.effort || {
+        effort: {
           recommended_duration_minutes: place.duration_minutes || null
         },
-        accessibility: place.accessibility || [],
-        verification: place.verification || {
-          status: place.verification_status || "needs_check",
-          checked_at: "",
-          missing_fields: []
-        },
-        verification_status: place.verification_status || place.verification?.status || "needs_check",
-        safety_notes: place.safety_notes || [],
-        avoid_for: place.avoid_for || [],
-        source_summary: place.source_summary || [],
-        external_validation: place.external_validation || null,
         info_url: place.info_url || "",
         visit_info: place.visit_info || null,
         location: validLocation(place.location) ? place.location : null,
+        verification_status: "needs_check",
         unavailable: place.available === false
       });
     }
@@ -2009,33 +1994,6 @@ function visitServiceStatusLabel(value) {
   return "";
 }
 
-function locationValidationMarkup(place) {
-  const validation = place?.location_validation && typeof place.location_validation === "object"
-    ? place.location_validation
-    : null;
-  if (!validation) {
-    return "";
-  }
-  const showWarning = validation.requires_human_review
-    || validation.review_priority === "contextual";
-  if (!showWarning) {
-    return "";
-  }
-  const isContextual = validation.review_priority === "contextual";
-  const sourceUrl = safeExternalUrl(validation.official_page_url);
-  const heading = validation.requires_human_review ? "위치 재확인 필요" : "위치 기준점 안내";
-  return `
-    <aside class="location-validation-alert ${isContextual ? "contextual" : "review"}" role="note">
-      <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
-      <span>
-        <strong>${escapeHtml(heading)}</strong>
-        <small>${escapeHtml(validation.notice || "길찾기 전에 공식 주소와 지도 위치를 다시 확인해 주세요.")}</small>
-        ${sourceUrl ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">VisitJeju 기준 정보</a>` : ""}
-      </span>
-    </aside>
-  `;
-}
-
 function visitInfoMarkup(place) {
   const info = place?.visit_info && typeof place.visit_info === "object" ? place.visit_info : {};
   const address = String(info.address || "").trim();
@@ -2057,7 +2015,6 @@ function visitInfoMarkup(place) {
         <span><strong>${escapeHtml(serviceLabel)}</strong> · 방문 전 공식 운영 여부를 다시 확인해 주세요.</span>
       </p>
     ` : ""}
-    ${locationValidationMarkup(place)}
     <details class="visit-info-card detail-disclosure ${hasDetails ? "" : "empty"}">
       <summary>
         <span class="detail-disclosure-heading">
@@ -3162,9 +3119,6 @@ function aiExplanationPanelMarkup(scenario, generatedSections, localSections, ci
 function visitCheckItems(place, routeItem) {
   const checks = [
     routeItem.stay_tip,
-    place?.external_validation?.conclusion
-      ? `외부 사진·캡션 대조: ${place.external_validation.conclusion}`
-      : "",
     ...(place?.check_before_visit || []),
     ...(place?.verification?.missing_fields || []).map((field) => `${accessibilityFieldLabels[field] || field} 현장 확인`)
   ];

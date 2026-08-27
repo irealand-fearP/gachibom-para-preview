@@ -836,11 +836,7 @@
   }
 
   .tourism-hero h1 {
-    font-family: inherit;
-    font-size: clamp(34px, 11vw, 40px);
-    line-height: 1.18;
-    letter-spacing: -0.035em;
-    word-break: keep-all;
+    font-size: 42px;
   }
 
   .tourism-hero p {
@@ -966,27 +962,6 @@
     align-items: flex-start;
     flex-direction: column;
     padding: 24px 16px;
-  }
-
-  .tourism-courses-page main {
-    word-break: keep-all;
-    overflow-wrap: break-word;
-  }
-
-  .tourism-content :where(p, li, dt, dd, small, summary, a) {
-    font-size: 14px !important;
-    line-height: 1.65;
-  }
-
-  .tourism-content :where(span, b, em),
-  .tourism-source-band :where(span, small, a) {
-    font-size: 13px !important;
-    line-height: 1.55;
-  }
-
-  .tourism-toolbar :where(label, button) {
-    font-size: 14px;
-    line-height: 1.45;
   }
 }
 

@@ -1,9 +1,8 @@
 (() => {
   "use strict";
 
-  const DATA_URLS = ["data/jeju_para_games_2026.json", "/api/para-games"];
+  const DATA_URLS = ["/api/para-games", "data/jeju_para_games_2026.json"];
   const FACILITY_API_URL = "/api/help-chat";
-  const FACILITY_DATA_URL = "data/jeju_para_games_nearby_facilities.json";
   const RESOURCE_TYPES = ["accessible_toilet", "power_wheelchair_fast_charger"];
   const venueList = document.getElementById("gamesVenueList");
   const venueDetail = document.getElementById("gamesVenueDetail");
@@ -24,10 +23,17 @@
   const overviewContent = document.getElementById("gamesOverviewContent");
   const scheduleSearch = document.getElementById("gamesScheduleSearch");
   const scheduleScope = document.getElementById("gamesScheduleScope");
+  const scheduleDisability = document.getElementById("gamesScheduleDisability");
   const scheduleCount = document.getElementById("gamesScheduleCount");
   const scheduleResults = document.getElementById("gamesScheduleResults");
   const scheduleLive = document.getElementById("gamesScheduleLive");
   const contactGrid = document.getElementById("gamesContactGrid");
+  const operationsSummary = document.getElementById("gamesOperationsSummary");
+  const incidentCount = document.getElementById("gamesIncidentCount");
+  const incidentList = document.getElementById("gamesIncidentList");
+  const officialSourceGrid = document.getElementById("gamesOfficialSourceGrid");
+  const officialScheduleLink = document.getElementById("gamesOfficialScheduleLink");
+  const noticeMeta = document.getElementById("gamesNoticeMeta");
 
   const RECENT_SPORTS_KEY = "gachibom.paraGames.recentSports";
   const RECENT_SPORTS_LIMIT = 5;
@@ -39,7 +45,6 @@
   let selectedVenueId = "";
   let selectedScheduleSportIndex = -1;
   let facilityRequest = null;
-  let facilityCache = null;
   let calendarMonth = "";          // 화면에 보이는 달 "YYYY-MM"
   let selectedScheduleDate = "";   // 달력에서 선택한 날 "YYYY-MM-DD"
   let scheduleMonthRange = null;   // 데이터에 존재하는 달의 최소·최대
@@ -120,6 +125,13 @@
   }
 
   function validateData(data) {
+    data.official_sources = Array.isArray(data?.official_sources) ? data.official_sources : [];
+    data.incidents = Array.isArray(data?.incidents) ? data.incidents : [];
+    data.official_sources.forEach((source) => {
+      if (source && source.review_every_days == null) {
+        source.review_every_days = 3;
+      }
+    });
     if (
       !data?.event
       || !Array.isArray(data.venues)
@@ -168,7 +180,58 @@
     if (!validContacts) {
       throw new Error("현장 연락처 데이터에 확인이 필요한 항목이 있습니다.");
     }
+    const validSources = data.official_sources.every((source) => (
+      source?.id
+      && source?.title
+      && ["verified", "check_required", "unavailable"].includes(source.status)
+      && /^\d{4}-\d{2}-\d{2}$/.test(source.checked_at)
+      && Number.isInteger(source.review_every_days)
+      && source.review_every_days >= 1
+      && source.review_every_days <= 30
+      && safeHttpUrl(source.url)
+    ));
+    const validIncidents = data.incidents.every((incident) => (
+      incident?.id
+      && incident?.title
+      && incident?.detail
+      && ["info", "warning", "critical"].includes(incident.severity)
+      && ["draft", "active", "resolved"].includes(incident.status)
+      && /^\d{4}-\d{2}-\d{2}$/.test(incident.starts_on)
+      && (!incident.expires_on || /^\d{4}-\d{2}-\d{2}$/.test(incident.expires_on))
+      && safeHttpUrl(incident.source_url)
+    ));
+    if (!validSources || !validIncidents) {
+      throw new Error("운영 상태 데이터에 확인이 필요한 항목이 있습니다.");
+    }
     return data;
+  }
+
+  function isCurrentItem(item, startKey) {
+    const today = currentLocalDate();
+    const startsOn = item?.[startKey] || "0000-01-01";
+    return startsOn <= today && (!item?.expires_on || item.expires_on >= today);
+  }
+
+  function activeIncidents() {
+    const priority = { critical: 0, warning: 1, info: 2 };
+    return pageData.incidents
+      .filter((incident) => incident.status === "active" && isCurrentItem(incident, "starts_on"))
+      .sort((a, b) => priority[a.severity] - priority[b.severity]);
+  }
+
+  function sourceFreshness(source) {
+    const ageDays = daysUntil(source.checked_at, currentLocalDate());
+    const reviewEveryDays = source.review_every_days || 3;
+    return {
+      ageDays,
+      reviewEveryDays,
+      stale: ageDays >= reviewEveryDays,
+      ageLabel: ageDays === 0 ? "오늘 확인" : `${ageDays}일 전 확인`
+    };
+  }
+
+  function sourceDisplayStatus(source) {
+    return source.status === "verified" && sourceFreshness(source).stale ? "stale" : source.status;
   }
 
   function renderEventStatus() {
@@ -367,11 +430,36 @@
     }
   }
 
+  // ── 장애 유형 필터 ──────────────────────────────────────────────────────
+  // 데이터의 disability 표기가 "지체장애"·"지체·뇌병변"처럼 자유 문자열이라 키워드 부분일치로 판정한다.
+  const DISABILITY_KEYWORDS = {
+    "지체": ["지체"],
+    "시각": ["시각"],
+    "지적발달": ["지적", "발달"],
+    "청각": ["청각"],
+    "뇌병변": ["뇌병변"],
+  };
+  // "전종별"은 전 유형이 함께 출전하는 경기라 어떤 유형을 골라도 남긴다.
+  const ALL_TYPES_LABEL = "전종별";
+
+  function matchesDisability(disabilityText, selectedType) {
+    if (selectedType === "all") {
+      return true;
+    }
+    const text = String(disabilityText || "");
+    if (text.includes(ALL_TYPES_LABEL)) {
+      return true;
+    }
+    const keywords = DISABILITY_KEYWORDS[selectedType];
+    return Array.isArray(keywords) && keywords.some((keyword) => text.includes(keyword));
+  }
+
   // ── 일정 인덱스 ────────────────────────────────────────────────────────
-  // 검색어·지역 필터를 통과한 경기만 (종목, 경기) 쌍으로 펼친다.
+  // 검색어·지역·장애 유형 필터를 모두(AND) 통과한 경기만 (종목, 경기) 쌍으로 펼친다.
   function filterScheduleEntries() {
     const query = normalizedText(scheduleSearch.value.trim());
     const selectedScope = scheduleScope.value;
+    const selectedDisability = scheduleDisability ? scheduleDisability.value : "all";
     const entries = [];
     pageData.sports.forEach((sport, sportIndex) => {
       const sportMatches = !query || normalizedText(sport.name).includes(query);
@@ -379,7 +467,8 @@
         const queryMatches = sportMatches || [event.division, event.disability, event.venue, event.schedule_label, event.preparation, event.scope_label]
           .some((value) => normalizedText(value).includes(query));
         const scopeMatches = selectedScope === "all" || event.location_scope === selectedScope;
-        if (queryMatches && scopeMatches) {
+        const disabilityMatches = matchesDisability(event.disability, selectedDisability);
+        if (queryMatches && scopeMatches && disabilityMatches) {
           entries.push({ sportIndex, sportName: sport.name, event });
         }
       });
@@ -718,14 +807,108 @@
     }).join("");
   }
 
+  function affectedScope(item) {
+    const labels = [];
+    if (item.affected_venues?.length) {
+      labels.push(`경기장 ${item.affected_venues.join(", ")}`);
+    }
+    if (item.affected_sports?.length) {
+      labels.push(`종목 ${item.affected_sports.join(", ")}`);
+    }
+    return labels.join(" · ") || "영향 범위 별도 확인";
+  }
+
+  function renderOperations() {
+    const incidents = activeIncidents();
+    const sourceWarnings = pageData.official_sources.filter((source) => sourceDisplayStatus(source) !== "verified");
+    const hasCritical = incidents.some((incident) => incident.severity === "critical");
+    const summaryTitle = hasCritical
+      ? "즉시 확인이 필요한 현장 이슈가 있습니다."
+      : incidents.length
+        ? `진행 중 운영 이슈 ${incidents.length}건이 있습니다.`
+        : sourceWarnings.length
+          ? `공식 정보 ${sourceWarnings.length}곳은 재확인이 필요합니다.`
+          : "공식 정보 확인 상태가 최신입니다.";
+    const summaryDetail = sourceWarnings.length
+      ? "이동 전에 확인 주기와 공식 원문을 함께 확인해 주세요."
+      : incidents.length
+        ? "아래 영향 범위와 공식 출처를 확인해 주세요."
+        : "공식 원문은 이동 직전에 한 번 더 확인해 주세요.";
+    operationsSummary.dataset.kind = hasCritical ? "critical" : incidents.length || sourceWarnings.length ? "warning" : "clear";
+    operationsSummary.innerHTML = `
+      <i class="bi ${hasCritical ? "bi-exclamation-octagon-fill" : incidents.length || sourceWarnings.length ? "bi-exclamation-triangle-fill" : "bi-check-circle-fill"}" aria-hidden="true"></i>
+      <div>
+        <strong>${summaryTitle}</strong>
+        <span>${summaryDetail}</span>
+      </div>
+    `;
+
+    incidentCount.textContent = incidents.length ? `${incidents.length}건 진행 중` : "등록 이슈 없음";
+    incidentList.innerHTML = incidents.length ? incidents.map((incident) => {
+      const sourceUrl = safeHttpUrl(incident.source_url);
+      const severityLabel = incident.severity === "critical" ? "긴급" : incident.severity === "warning" ? "주의" : "안내";
+      const period = `${formatReferenceDate(incident.starts_on)}부터${incident.expires_on ? ` ${formatReferenceDate(incident.expires_on)}까지` : " 종료 공지 시까지"}`;
+      return `
+        <article class="games-incident-card" data-severity="${escapeHtml(incident.severity)}">
+          <div class="games-incident-head"><span>${severityLabel}</span><small>${escapeHtml(period)}</small></div>
+          <h4>${escapeHtml(incident.title)}</h4>
+          <p>${escapeHtml(incident.detail)}</p>
+          <strong><i class="bi bi-bullseye" aria-hidden="true"></i> ${escapeHtml(affectedScope(incident))}</strong>
+          ${sourceUrl ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(incident.source_title)} <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>` : ""}
+        </article>
+      `;
+    }).join("") : `
+      <div class="games-no-incident">
+        <i class="bi bi-check2-circle" aria-hidden="true"></i>
+        <div><strong>현재 등록된 운영 이슈 없음</strong><p>새 공지가 등록될 수 있으므로 이동 직전에 다시 확인하세요.</p></div>
+      </div>
+    `;
+
+    officialSourceGrid.innerHTML = pageData.official_sources.length ? pageData.official_sources.map((source) => {
+      const sourceUrl = safeHttpUrl(source.url);
+      const freshness = sourceFreshness(source);
+      const displayStatus = sourceDisplayStatus(source);
+      const cardStatus = displayStatus === "stale" ? "check_required" : displayStatus;
+      const statusLabel = displayStatus === "verified" ? "확인 완료" : displayStatus === "unavailable" ? "접속 불가" : displayStatus === "stale" ? "갱신 필요" : "재확인 필요";
+      const statusIcon = displayStatus === "verified" ? "bi-check-circle-fill" : displayStatus === "unavailable" ? "bi-x-octagon-fill" : "bi-exclamation-circle-fill";
+      return `
+        <article class="games-source-card" data-status="${escapeHtml(cardStatus)}">
+          <div class="games-source-card-head"><span>${escapeHtml(source.category)}</span><b><i class="bi ${statusIcon}" aria-hidden="true"></i> ${statusLabel}</b></div>
+          <h4>${escapeHtml(source.title)}</h4>
+          <p>${escapeHtml(source.description)}</p>
+          <small>확인일 ${escapeHtml(formatReferenceDate(source.checked_at))} · ${escapeHtml(freshness.ageLabel)} · ${freshness.reviewEveryDays}일 주기</small>
+          <em>${escapeHtml(source.note)}</em>
+          ${sourceUrl ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">공식 페이지 열기 <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>` : ""}
+        </article>
+      `;
+    }).join("") : '<p class="games-empty">연결된 공식 정보가 없습니다. 대회 공식 홈페이지를 확인해 주세요.</p>';
+
+    const scheduleSource = pageData.official_sources.find((source) => source.id === "schedule-results");
+    const scheduleUrl = safeHttpUrl(scheduleSource?.url);
+    if (scheduleUrl) {
+      officialScheduleLink.href = scheduleUrl;
+      officialScheduleLink.hidden = false;
+    } else {
+      officialScheduleLink.hidden = true;
+    }
+  }
+
   function renderNotices() {
-    const notice = pageData.notices?.[0];
+    const notice = pageData.notices?.find((item) => isCurrentItem(item, "published_on")) || pageData.notices?.[0];
+    const currentNotice = notice && isCurrentItem(notice, "published_on");
+    const featuredIncident = activeIncidents()[0];
     noticeTitle.textContent = notice?.title || "일정은 출발 전에 다시 확인하세요";
     noticeDetail.textContent = notice?.detail || "종목별 경기단체 공지와 현장 운영 안내가 가장 최신일 수 있습니다.";
-    liveAlert.hidden = notice?.urgent !== true;
-    if (notice?.urgent === true) {
-      liveAlertTitle.textContent = notice.title;
-      liveAlertDetail.textContent = notice.detail;
+    noticeMeta.textContent = notice
+      ? `${currentNotice ? "게시 중" : "게시 기간 종료"} · ${affectedScope(notice)}${notice.expires_on ? ` · ${formatReferenceDate(notice.expires_on)}까지` : ""}`
+      : "";
+    const featuredNotice = currentNotice && notice?.urgent === true ? notice : null;
+    const featured = featuredIncident || featuredNotice;
+    liveAlert.hidden = !featured;
+    if (featured) {
+      liveAlert.dataset.severity = featured.severity || "warning";
+      liveAlertTitle.textContent = featured.title;
+      liveAlertDetail.textContent = featured.detail;
     }
     const links = [
       { title: pageData.event.source_title, url: pageData.event.source_url },
@@ -862,33 +1045,7 @@
     }
   }
 
-  async function loadFacilityCache() {
-    if (facilityCache) {
-      return facilityCache;
-    }
-    const response = await fetch(FACILITY_DATA_URL, { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    const payload = await response.json();
-    facilityCache = payload?.venues && typeof payload.venues === "object" ? payload.venues : {};
-    return facilityCache;
-  }
-
   async function loadFacilities(venue) {
-    try {
-      const cachedByVenue = await loadFacilityCache();
-      const cachedPayload = cachedByVenue[venue.id];
-      if (cachedPayload) {
-        if (selectedVenueId === venue.id) {
-          renderFacilityResults(cachedPayload);
-        }
-        return;
-      }
-    } catch (error) {
-      // Use the live API when the bundled public-data cache is unavailable.
-    }
-
     facilityRequest?.abort();
     facilityRequest = new AbortController();
     try {
@@ -946,6 +1103,10 @@
     overviewContent.innerHTML = '<p class="games-empty">대회 개요를 불러오지 못했습니다.</p>';
     scheduleResults.innerHTML = '<p class="games-empty">전체 경기 일정을 불러오지 못했습니다.</p>';
     contactGrid.innerHTML = '<p class="games-empty">연락처를 불러오지 못했습니다.</p>';
+    incidentList.innerHTML = '<p class="games-empty">운영 이슈를 불러오지 못했습니다.</p>';
+    officialSourceGrid.innerHTML = '<p class="games-empty">공식 정보를 불러오지 못했습니다.</p>';
+    operationsSummary.dataset.kind = "critical";
+    operationsSummary.innerHTML = '<i class="bi bi-exclamation-octagon-fill" aria-hidden="true"></i><div><strong>운영 상태를 불러오지 못했습니다.</strong><span>대회 공식 홈페이지를 직접 확인해 주세요.</span></div>';
   }
 
   async function loadData() {
@@ -970,6 +1131,7 @@
       renderOverview();
       renderSchedule();
       renderContacts();
+      renderOperations();
       renderNotices();
       const requestedVenue = new URLSearchParams(window.location.search).get("venue");
       selectVenue(requestedVenue, { updateHistory: false });
@@ -994,6 +1156,12 @@
   });
 
   scheduleScope.addEventListener("change", () => {
+    if (pageData) {
+      renderSchedule();
+    }
+  });
+
+  scheduleDisability?.addEventListener("change", () => {
     if (pageData) {
       renderSchedule();
     }

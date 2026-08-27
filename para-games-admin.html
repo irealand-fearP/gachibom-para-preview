@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="2026 제주 장애인체전 공지, 종목 일정, 경기장 정보를 관리하는 가치봄 운영 화면">
+  <title>장애인체전 운영 센터 | 가치봄 제주</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="para-games-admin.css?v=20260827-3">
+</head>
+<body>
+  <a class="skip-link" href="#adminWorkspace">관리 화면으로 건너뛰기</a>
+
+  <header class="admin-topbar">
+    <div class="topbar-inner">
+      <a class="admin-brand" href="index.html?intro=0#conceptPage" aria-label="가치봄 제주 메인으로 이동">
+        <span class="brand-mark" aria-hidden="true">가</span>
+        <span class="brand-copy"><strong>가치봄 운영 센터</strong><span>2026 제주 장애인체전</span></span>
+      </a>
+      <div class="topbar-actions">
+        <span class="mode-badge">운영 화면</span>
+        <a class="public-link" href="para-games.html">
+          <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><span>공개 안내 보기</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-shell" id="adminWorkspace">
+    <section class="admin-intro" aria-labelledby="adminTitle">
+      <div class="admin-intro-copy">
+        <p class="eyebrow"><i class="bi bi-command" aria-hidden="true"></i> TOURNAMENT OPERATIONS</p>
+        <h1 id="adminTitle">현장 정보는 빠르게,<br>수정은 정확하게.</h1>
+        <p>긴급 공지와 공식정보 상태, 현장 이슈, 종목 일정, 경기장 접근 정보를 한 화면에서 관리합니다. 변경 내용은 저장 후 공개 안내에 반영됩니다.</p>
+        <dl class="summary-list" aria-label="등록 정보 요약">
+          <div><dt>등록 종목</dt><dd><span id="sportCount">—</span>개</dd></div>
+          <div><dt>세부 일정</dt><dd><span id="eventCount">—</span>건</dd></div>
+          <div><dt>상세 경기장</dt><dd><span id="venueCount">—</span>곳</dd></div>
+        </dl>
+      </div>
+
+      <section class="auth-panel" aria-labelledby="adminTokenTitle">
+        <div class="auth-panel-head">
+          <span class="auth-icon"><i class="bi bi-key" aria-hidden="true"></i></span>
+          <div><h2 id="adminTokenTitle">관리자 인증</h2><p>암호는 브라우저에 저장하지 않습니다.</p></div>
+        </div>
+        <label for="adminToken">관리자 암호
+          <input id="adminToken" type="password" autocomplete="current-password" placeholder="저장할 때 필요한 암호" required>
+        </label>
+      </section>
+    </section>
+
+    <div class="status-strip" id="adminStatus" role="status" aria-live="polite">
+      <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+      <span id="adminStatusText">대회 정보를 불러오고 있습니다.</span>
+    </div>
+
+    <form id="adminForm" aria-busy="true">
+      <nav class="workspace-tabs" role="tablist" aria-label="정보 관리 영역">
+        <button class="tab-button" id="adminTabNotice" type="button" role="tab" aria-selected="true" aria-controls="adminPanelNotice" data-admin-tab="notice">
+          <i class="bi bi-megaphone" aria-hidden="true"></i>
+          <span class="tab-copy"><strong>현장 공지</strong><small>상단 긴급 안내</small></span>
+          <span class="tab-count" id="noticeTabState">일반</span>
+        </button>
+        <button class="tab-button" id="adminTabOperations" type="button" role="tab" aria-selected="false" aria-controls="adminPanelOperations" data-admin-tab="operations" tabindex="-1">
+          <i class="bi bi-broadcast-pin" aria-hidden="true"></i>
+          <span class="tab-copy"><strong>운영 상태</strong><small>공식정보·현장 이슈</small></span>
+          <span class="tab-count" id="operationsTabCount">—</span>
+        </button>
+        <button class="tab-button" id="adminTabSchedule" type="button" role="tab" aria-selected="false" aria-controls="adminPanelSchedule" data-admin-tab="schedule" tabindex="-1">
+          <i class="bi bi-calendar3" aria-hidden="true"></i>
+          <span class="tab-copy"><strong>종목 일정</strong><small>31개 종목 관리</small></span>
+          <span class="tab-count" id="scheduleTabCount">—</span>
+        </button>
+        <button class="tab-button" id="adminTabVenue" type="button" role="tab" aria-selected="false" aria-controls="adminPanelVenue" data-admin-tab="venue" tabindex="-1">
+          <i class="bi bi-geo-alt" aria-hidden="true"></i>
+          <span class="tab-copy"><strong>경기장 정보</strong><small>접근 상세 관리</small></span>
+          <span class="tab-count" id="venueTabCount">—</span>
+        </button>
+      </nav>
+
+      <section class="workspace-panel" id="adminPanelNotice" role="tabpanel" aria-labelledby="adminTabNotice" data-admin-panel="notice">
+        <aside class="editor-aside">
+          <p class="eyebrow">LIVE NOTICE</p>
+          <h2>공개 상태</h2>
+          <p>긴급 표시를 켜면 공개 안내 최상단에 공지가 강조됩니다.</p>
+          <label class="switch-card" for="noticeUrgent">
+            <span class="switch-copy"><strong>긴급 공지</strong><small>상단 붉은 안내 사용</small></span>
+            <input id="noticeUrgent" data-notice-field="urgent" type="checkbox">
+            <span class="switch-control" aria-hidden="true"></span>
+          </label>
+          <div class="context-card"><span>운영 원칙</span><strong>제목만으로 현장 행동을 판단할 수 있게 작성하세요.</strong></div>
+        </aside>
+
+        <div class="editor-main">
+          <header class="editor-heading">
+            <div><span>공지 편집</span><h2>방문자가 가장 먼저 볼 안내</h2></div>
+            <p>공식 출처와 현장 확인이 끝난 내용만 게시하세요.</p>
+          </header>
+          <div class="notice-editor-grid">
+            <div class="notice-fields">
+              <label for="noticeTitle">공지 제목<input id="noticeTitle" data-notice-field="title" maxlength="160" required></label>
+              <label for="noticeDetail">공지 내용<textarea id="noticeDetail" data-notice-field="detail" maxlength="1500" required></textarea></label>
+              <div class="form-grid">
+                <label for="noticeSeverity">중요도<select id="noticeSeverity" data-notice-field="severity"><option value="info">안내</option><option value="warning">주의</option><option value="critical">긴급</option></select></label>
+                <label for="noticePublishedOn">게시 시작일<input id="noticePublishedOn" data-notice-field="published_on" type="date" required></label>
+                <label for="noticeExpiresOn">게시 종료일<input id="noticeExpiresOn" data-notice-field="expires_on" type="date"><small class="field-help">비워 두면 종료 공지 시까지 표시됩니다.</small></label>
+                <label for="noticeAffectedSports">영향 종목<input id="noticeAffectedSports" data-notice-field="affected_sports" data-list-field="true" maxlength="500" placeholder="예: 수영, 탁구"></label>
+                <label class="wide" for="noticeAffectedVenues">영향 경기장<input id="noticeAffectedVenues" data-notice-field="affected_venues" data-list-field="true" maxlength="500" placeholder="예: 한라체육관, 제주종합경기장"></label>
+                <label for="noticeSourceTitle">출처명<input id="noticeSourceTitle" data-notice-field="source_title" maxlength="160" required></label>
+                <label for="noticeSourceUrl">공식 출처 주소<input id="noticeSourceUrl" data-notice-field="source_url" type="url" maxlength="2000" required></label>
+              </div>
+            </div>
+            <aside class="notice-preview" aria-label="공지 미리보기">
+              <p class="preview-label">공개 화면 미리보기</p>
+              <article class="preview-card" id="noticePreview" data-urgent="false">
+                <div class="preview-bar"></div>
+                <div class="preview-body">
+                  <span class="preview-state" id="noticePreviewState"><i class="bi bi-info-circle-fill" aria-hidden="true"></i> 일반 안내</span>
+                  <h3 id="noticePreviewTitle">공지 제목</h3>
+                  <p id="noticePreviewDetail">공지 내용이 여기에 표시됩니다.</p>
+                  <p class="preview-meta" id="noticePreviewMeta">게시 기간과 영향 범위를 확인해 주세요.</p>
+                  <p class="preview-source" id="noticePreviewSource">출처 확인 중</p>
+                </div>
+              </article>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace-panel" id="adminPanelOperations" role="tabpanel" aria-labelledby="adminTabOperations" data-admin-panel="operations" hidden>
+        <aside class="editor-aside">
+          <p class="eyebrow">LIVE OPERATIONS</p>
+          <h2>운영 이슈 선택</h2>
+          <p>공개 중인 이슈는 방문자 화면 상단에 표시됩니다. 새 이슈는 초안으로 생성됩니다.</p>
+          <div class="picker-stack">
+            <label class="wide-mobile" for="incidentSelect">운영 이슈<select id="incidentSelect"></select></label>
+          </div>
+          <div class="aside-button-row">
+            <button class="secondary-button" id="addIncidentButton" type="button"><i class="bi bi-plus-lg" aria-hidden="true"></i> 새 이슈</button>
+            <button class="danger-button" id="deleteIncidentButton" type="button"><i class="bi bi-trash3" aria-hidden="true"></i> 삭제</button>
+          </div>
+          <div class="context-card"><span>현재 상태</span><strong id="operationsContext">공식 정보 상태를 불러오는 중입니다.</strong></div>
+        </aside>
+
+        <div class="editor-main">
+          <header class="editor-heading">
+            <div><span>운영 상태 편집</span><h2>공식정보 확인과 현장 이슈</h2></div>
+            <p>공식 페이지를 확인한 뒤 ‘오늘 확인 처리’를 누르세요. 확인 주기를 넘기면 공개 화면에서 자동으로 갱신 필요 상태가 됩니다.</p>
+          </header>
+          <fieldset class="edit-section">
+            <legend>공식 정보 확인 상태</legend>
+            <div class="source-editor-grid" id="officialSourceEditor"></div>
+          </fieldset>
+          <fieldset class="edit-section">
+            <legend>현장 운영 이슈</legend>
+            <div class="incident-empty" id="incidentEmpty">
+              <i class="bi bi-check2-circle" aria-hidden="true"></i>
+              <div><strong>등록된 운영 이슈가 없습니다.</strong><p>현장 영향이 발생하면 ‘새 이슈’를 눌러 초안부터 작성하세요.</p></div>
+            </div>
+            <div id="incidentFields" hidden>
+              <div class="form-grid">
+                <label for="incidentStatus">공개 상태<select id="incidentStatus" data-incident-field="status"><option value="draft">초안</option><option value="active">공개 중</option><option value="resolved">종료</option></select></label>
+                <label for="incidentSeverity">중요도<select id="incidentSeverity" data-incident-field="severity"><option value="info">안내</option><option value="warning">주의</option><option value="critical">긴급</option></select></label>
+                <label class="wide" for="incidentTitle">이슈 제목<input id="incidentTitle" data-incident-field="title" maxlength="160" required></label>
+                <label class="wide" for="incidentDetail">방문자 행동 안내<textarea id="incidentDetail" data-incident-field="detail" maxlength="1500" required></textarea></label>
+                <label for="incidentStartsOn">표시 시작일<input id="incidentStartsOn" data-incident-field="starts_on" type="date" required></label>
+                <label for="incidentExpiresOn">표시 종료일<input id="incidentExpiresOn" data-incident-field="expires_on" type="date"><small class="field-help">비워 두면 직접 종료할 때까지 표시됩니다.</small></label>
+                <label for="incidentAffectedSports">영향 종목<input id="incidentAffectedSports" data-incident-field="affected_sports" data-list-field="true" maxlength="500" placeholder="쉼표로 구분"></label>
+                <label for="incidentAffectedVenues">영향 경기장<input id="incidentAffectedVenues" data-incident-field="affected_venues" data-list-field="true" maxlength="500" placeholder="쉼표로 구분"></label>
+                <label for="incidentSourceTitle">확인 출처명<input id="incidentSourceTitle" data-incident-field="source_title" maxlength="160" required></label>
+                <label for="incidentSourceUrl">확인 출처 주소<input id="incidentSourceUrl" data-incident-field="source_url" type="url" maxlength="2000" required></label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </section>
+
+      <section class="workspace-panel" id="adminPanelSchedule" role="tabpanel" aria-labelledby="adminTabSchedule" data-admin-panel="schedule" hidden>
+        <aside class="editor-aside">
+          <p class="eyebrow">SPORT SCHEDULE</p>
+          <h2>일정 선택</h2>
+          <p>등록된 종목과 세부 일정을 선택하면 오른쪽 편집 화면이 바뀝니다.</p>
+          <div class="picker-stack">
+            <label for="sportSelect">종목<select id="sportSelect"></select></label>
+            <label for="eventSelect">세부 일정<select id="eventSelect"></select></label>
+          </div>
+          <div class="context-card"><span>현재 선택</span><strong id="eventContext">종목 정보를 불러오는 중입니다.</strong></div>
+        </aside>
+
+        <div class="editor-main">
+          <header class="editor-heading">
+            <div><span>일정 편집</span><h2 id="eventEditorTitle">세부 경기 일정</h2></div>
+            <p>날짜와 화면 표시 문구가 서로 일치하는지 확인하세요.</p>
+          </header>
+          <fieldset class="edit-section">
+            <legend>경기 대상과 장소</legend>
+            <div class="form-grid">
+              <label for="eventDivision">종별<input id="eventDivision" data-event-field="division" maxlength="160" required></label>
+              <label for="eventDisability">장애 유형<input id="eventDisability" data-event-field="disability" maxlength="160" required></label>
+              <label class="wide" for="eventVenue">경기장<input id="eventVenue" data-event-field="venue" maxlength="160" required></label>
+            </div>
+          </fieldset>
+          <fieldset class="edit-section">
+            <legend>운영 일정</legend>
+            <div class="form-grid">
+              <label for="eventStartDate">시작일<input id="eventStartDate" data-event-field="start_date" type="date" required></label>
+              <label for="eventEndDate">종료일<input id="eventEndDate" data-event-field="end_date" type="date" required></label>
+              <label class="wide" for="eventScheduleLabel">공개 화면 표시 일정<input id="eventScheduleLabel" data-event-field="schedule_label" maxlength="160" required></label>
+              <label class="wide" for="eventPreparation">연습·검사 등 준비 일정<input id="eventPreparation" data-event-field="preparation" maxlength="200" placeholder="준비 일정이 없으면 비워 두세요"></label>
+            </div>
+          </fieldset>
+          <fieldset class="edit-section">
+            <legend>지역 구분</legend>
+            <div class="form-grid">
+              <label for="eventScope">경기 지역<select id="eventScope" data-event-field="location_scope"><option value="jeju">제주</option><option value="off_island">타 시도</option></select></label>
+              <label for="eventScopeLabel">지역 표시<input id="eventScopeLabel" data-event-field="scope_label" maxlength="80" placeholder="예: 경남 창원"></label>
+            </div>
+          </fieldset>
+        </div>
+      </section>
+
+      <section class="workspace-panel" id="adminPanelVenue" role="tabpanel" aria-labelledby="adminTabVenue" data-admin-panel="venue" hidden>
+        <aside class="editor-aside">
+          <p class="eyebrow">VENUE ACCESS</p>
+          <h2>경기장 선택</h2>
+          <p>공개 화면에서 접근 상세를 제공하는 주요 경기장을 관리합니다.</p>
+          <div class="picker-stack"><label class="wide-mobile" for="venueSelect">경기장<select id="venueSelect"></select></label></div>
+          <div class="context-card"><span>현재 선택</span><strong id="venueContext">경기장 정보를 불러오는 중입니다.</strong></div>
+        </aside>
+
+        <div class="editor-main">
+          <header class="editor-heading">
+            <div><span>경기장 편집</span><h2 id="venueEditorTitle">경기장 접근 정보</h2></div>
+            <p>주소·좌표와 접근성 안내는 현장 확인 후 수정하세요.</p>
+          </header>
+          <fieldset class="edit-section">
+            <legend>기본 정보</legend>
+            <div class="form-grid">
+              <label for="venueName">경기장명<input id="venueName" data-venue-field="name" maxlength="120" required></label>
+              <label for="venueArea">지역<input id="venueArea" data-venue-field="area" maxlength="80" required></label>
+              <label class="wide" for="venueAddress">주소<input id="venueAddress" data-venue-field="address" maxlength="200" required></label>
+              <label for="venueLatitude">위도<input id="venueLatitude" data-venue-field="latitude" type="number" min="33" max="34" step="0.0000001" required></label>
+              <label for="venueLongitude">경도<input id="venueLongitude" data-venue-field="longitude" type="number" min="126" max="127" step="0.0000001" required></label>
+            </div>
+          </fieldset>
+          <fieldset class="edit-section">
+            <legend>운영 정보</legend>
+            <div class="form-grid">
+              <label for="venueProgram">경기·행사<input id="venueProgram" data-venue-field="program" maxlength="160" required></label>
+              <label for="venuePhase">운영 단계<input id="venuePhase" data-venue-field="phase" maxlength="80" required></label>
+              <label for="venueStartDate">시작일<input id="venueStartDate" data-venue-field="start_date" type="date" required></label>
+              <label for="venueEndDate">종료일<input id="venueEndDate" data-venue-field="end_date" type="date" required></label>
+              <label class="wide" for="venueScheduleLabel">공개 화면 표시 일정<input id="venueScheduleLabel" data-venue-field="schedule_label" maxlength="160" required></label>
+            </div>
+          </fieldset>
+          <fieldset class="edit-section">
+            <legend>접근성과 공식 출처</legend>
+            <div class="form-grid">
+              <label class="wide" for="venueAccessNote">접근성 안내<textarea id="venueAccessNote" data-venue-field="accessibility_note" maxlength="1000" required></textarea></label>
+              <label for="venueSourceTitle">출처명<input id="venueSourceTitle" data-venue-field="source_title" maxlength="160" required></label>
+              <label for="venueSourceUrl">공식 출처 주소<input id="venueSourceUrl" data-venue-field="source_url" type="url" maxlength="2000" required></label>
+            </div>
+          </fieldset>
+        </div>
+      </section>
+
+      <div class="save-bar">
+        <div class="save-state" id="saveState" data-dirty="false">
+          <span class="save-state-dot" aria-hidden="true"></span>
+          <div><strong id="saveStateTitle">변경 사항 없음</strong><span id="saveStateDetail">필드를 수정하면 저장할 수 있습니다.</span></div>
+        </div>
+        <button class="save-button" id="saveButton" type="submit" disabled><i class="bi bi-cloud-arrow-up" aria-hidden="true"></i> 변경 내용 저장</button>
+      </div>
+    </form>
+  </main>
+  <script src="para-games-admin.js?v=20260827-4"></script>
+</body>
+</html>
