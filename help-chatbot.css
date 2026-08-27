@@ -221,8 +221,8 @@
   z-index: 2147483000;
   --helpbot-panel-top: 92px;
   --helpbot-panel-right: 18px;
-  --helpbot-panel-width: min(440px, calc(100vw - 36px));
-  --helpbot-panel-height: min(660px, calc(100vh - 116px));
+  --helpbot-panel-width: min(520px, calc(100vw - 48px));
+  --helpbot-panel-height: min(760px, calc(100vh - 116px));
   --helpbot-tab-top: calc(var(--helpbot-panel-top) + 56px);
   --helpbot-wing-size: 56px;
   pointer-events: none;
@@ -663,6 +663,7 @@
 }
 
 .helpbot-head-actions {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -710,6 +711,7 @@
   color: #4f5967;
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .helpbot-close {

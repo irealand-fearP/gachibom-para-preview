@@ -3379,6 +3379,16 @@ function syncCenterMapMarkerSelection(entries) {
   });
 }
 
+function centerMapFitOptions(animate) {
+  const mobile = window.matchMedia?.("(max-width: 560px)")?.matches === true;
+  return {
+    paddingTopLeft: mobile ? [64, 24] : [96, 106],
+    paddingBottomRight: mobile ? [20, 36] : [96, 116],
+    maxZoom: 11.25,
+    animate
+  };
+}
+
 function drawCenterMap(entries, summary, options = {}) {
   const map = centerMap;
   if (!map || !centerRouteLayerGroup || !centerMarkerLayerGroup || entries.length === 0) {
@@ -3437,12 +3447,7 @@ function drawCenterMap(entries, summary, options = {}) {
 
   if (options.fit) {
     const bounds = L.latLngBounds(markerLatLngs);
-    map.fitBounds(bounds, {
-      paddingTopLeft: [96, 106],
-      paddingBottomRight: [96, 116],
-      maxZoom: 11.25,
-      animate: false
-    });
+    map.fitBounds(bounds, centerMapFitOptions(false));
   }
   window.setTimeout(() => {
     map.invalidateSize();
@@ -3482,12 +3487,7 @@ function fitCenterMapToRoute() {
     return;
   }
   const bounds = L.latLngBounds(entries.map((entry) => [Number(entry.location.latitude), Number(entry.location.longitude)]));
-  centerMap.fitBounds(bounds, {
-    paddingTopLeft: [96, 106],
-    paddingBottomRight: [96, 116],
-    maxZoom: 11.25,
-    animate: true
-  });
+  centerMap.fitBounds(bounds, centerMapFitOptions(true));
 }
 
 function runWhenBrowserIdle(callback, timeout = 900) {

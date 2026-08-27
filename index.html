@@ -23,8 +23,8 @@
   </script>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css?v=1.9.4">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="styles.css?v=20260827-2">
-  <link rel="stylesheet" href="help-chatbot.css?v=20260726-1">
+  <link rel="stylesheet" href="styles.css?v=20260828-4">
+  <link rel="stylesheet" href="help-chatbot.css?v=20260828-4">
 </head>
 <body class="modal-open site-intro-open">
   <div class="site-intro" id="siteIntro" role="dialog" aria-modal="true" aria-labelledby="siteIntroTitle">
@@ -100,10 +100,48 @@
 
     <section class="concept-page" id="conceptPage" aria-labelledby="conceptPageTitle">
       <div class="concept-main">
-        <span class="concept-kicker">테마별 제주 추천</span>
-        <h1 id="conceptPageTitle">오늘의 여행 테마를 고르세요</h1>
-        <p>회복, 휠체어, 아이 동반, 날씨, 음식 제한 상황에 맞춰 접근성 여행지를 바로 추천합니다.</p>
-        <div class="concept-grid" id="conceptGrid"></div>
+        <span class="concept-kicker">가치봄 여행</span>
+        <h1 id="conceptPageTitle">어떤 여행이 필요하세요?</h1>
+        <p>원하는 도움 하나만 고르세요. 추천 이유와 확인한 접근성 정보를 함께 보여드립니다.</p>
+
+        <div class="travel-task-grid" aria-label="여행 서비스 시작">
+          <details class="travel-recommend-task">
+            <summary>
+              <span class="travel-task-icon" aria-hidden="true"><i class="bi bi-stars"></i></span>
+              <span class="travel-task-copy">
+                <strong>여행 추천받기</strong>
+                <small>내 상황에 맞는 제주 코스를 빠르게 만들어요.</small>
+              </span>
+              <i class="bi bi-chevron-down travel-task-chevron" aria-hidden="true"></i>
+            </summary>
+            <section class="travel-theme-picker" aria-labelledby="travelThemeTitle">
+              <header class="travel-theme-heading">
+                <h2 id="travelThemeTitle">여행 상황 하나만 고르세요</h2>
+                <p>가장 가까운 항목을 선택하세요. 세부 조건은 다음 화면에서 바꿀 수 있습니다.</p>
+              </header>
+              <div class="concept-grid" id="conceptGrid" tabindex="-1" aria-label="여행 상황 선택"></div>
+            </section>
+          </details>
+
+          <div class="travel-secondary-tasks">
+            <a class="travel-task-action" href="#recommendations" data-nav-target="recommend">
+              <span class="travel-task-icon" aria-hidden="true"><i class="bi bi-universal-access-circle"></i></span>
+              <span class="travel-task-copy">
+                <strong>접근 가능한 장소 찾기</strong>
+                <small>지도에서 출입, 화장실, 주차 정보를 확인해요.</small>
+              </span>
+              <i class="bi bi-arrow-right" aria-hidden="true"></i>
+            </a>
+            <button class="travel-task-action" type="button" data-open-saved-routes aria-haspopup="dialog">
+              <span class="travel-task-icon" aria-hidden="true"><i class="bi bi-bookmark-heart"></i></span>
+              <span class="travel-task-copy">
+                <strong>저장한 여행 보기</strong>
+                <small>저장한 코스와 방문 전 체크를 이어서 봐요.</small>
+              </span>
+              <i class="bi bi-arrow-right" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
       </div>
 
       <aside class="concept-result-panel" aria-label="선택 테마 맞춤 추천" tabindex="-1">
@@ -203,7 +241,7 @@
                 <span data-save-current-route-label>코스 저장</span>
               </button>
               <button class="live-map-button" type="button" data-map-layer-toggle>지도 바꾸기</button>
-              <button class="live-map-button" type="button" data-map-fit-route>코스 맞춤</button>
+              <button class="live-map-button" type="button" data-map-fit-route>전체 경로 보기</button>
             </div>
           </div>
           <div class="live-map-stats" id="liveMapStats" aria-live="polite"></div>
@@ -413,7 +451,7 @@
 
   <script src="vendor/leaflet/leaflet.js?v=1.9.4"></script>
   <script src="saved-trips.js?v=20260712-3"></script>
-  <script src="app.js?v=20260827-1"></script>
+  <script src="app.js?v=20260828-4"></script>
   <script src="help-chatbot.js?v=20260726-1"></script>
 </body>
 </html>
