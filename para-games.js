@@ -720,16 +720,15 @@
     const totalPages = dayPanelTotalPages(entries.length);
     const startIndex = (page - 1) * DAY_PANEL_PAGE_SIZE;
     const pageEntries = entries.slice(startIndex, startIndex + DAY_PANEL_PAGE_SIZE);
-    const rangeLabel = dayPanelRangeLabel(entries.length);
     // 경기가 한 페이지에 다 들어가면 컨트롤을 그리지 않는다(불필요한 버튼 노출 방지).
     const pager = totalPages <= 1 ? "" : `
         <nav class="games-day-pager" aria-label="그날 경기 목록 페이지 이동">
-          <button class="games-day-pager-btn" type="button" data-day-page-step="-1"
+          <button class="games-day-pager-btn" type="button" data-day-page-goto="${page - 1}" data-day-page-dir="prev"
             aria-label="이전 ${DAY_PANEL_PAGE_SIZE}경기 보기" ${page <= 1 ? "disabled" : ""}>
             <i class="bi bi-chevron-left" aria-hidden="true"></i> 이전
           </button>
-          <span class="games-day-pager-status">${rangeLabel} · ${page} / ${totalPages}페이지</span>
-          <button class="games-day-pager-btn" type="button" data-day-page-step="1"
+          <span class="games-day-pager-nums">${dayPagerNumbersMarkup(page, totalPages)}</span>
+          <button class="games-day-pager-btn" type="button" data-day-page-goto="${page + 1}" data-day-page-dir="next"
             aria-label="다음 ${DAY_PANEL_PAGE_SIZE}경기 보기" ${page >= totalPages ? "disabled" : ""}>
             다음 <i class="bi bi-chevron-right" aria-hidden="true"></i>
           </button>
@@ -746,6 +745,51 @@
         ${pager}
       </section>
     `;
+  }
+
+  // 한 줄에 보여 줄 번호 버튼 최대 개수(이 수를 넘으면 '…'으로 접는다).
+  const DAY_PAGER_MAX_NUMBERS = 7;
+
+  // 표시할 페이지 번호 목록을 만든다. 많아지면 처음·끝 + 현재 주변만 남기고 "gap"으로 접는다.
+  function dayPagerItems(page, totalPages) {
+    if (totalPages <= DAY_PAGER_MAX_NUMBERS) {
+      return Array.from({ length: totalPages }, (_, index) => index + 1);
+    }
+    let windowStart = Math.max(2, page - 1);
+    let windowEnd = Math.min(totalPages - 1, page + 1);
+    // 현재 페이지가 양 끝에 붙어도 가운데 창 크기가 줄지 않게 반대쪽으로 밀어 준다.
+    if (page <= 3) {
+      windowStart = 2;
+      windowEnd = 4;
+    } else if (page >= totalPages - 2) {
+      windowStart = totalPages - 3;
+      windowEnd = totalPages - 1;
+    }
+    const items = [1];
+    if (windowStart > 2) {
+      items.push("gap");
+    }
+    for (let number = windowStart; number <= windowEnd; number += 1) {
+      items.push(number);
+    }
+    if (windowEnd < totalPages - 1) {
+      items.push("gap");
+    }
+    items.push(totalPages);
+    return items;
+  }
+
+  function dayPagerNumbersMarkup(page, totalPages) {
+    return dayPagerItems(page, totalPages)
+      .map((item) => {
+        if (item === "gap") {
+          return '<span class="games-day-pager-gap" aria-hidden="true">…</span>';
+        }
+        const isCurrent = item === page;
+        return `<button class="games-day-pager-num ${isCurrent ? "is-current" : ""}" type="button"
+            data-day-page-goto="${item}" aria-label="${item}페이지"${isCurrent ? ' aria-current="page"' : ""}>${item}</button>`;
+      })
+      .join("");
   }
 
   function dayPanelTotalPages(totalCount) {
@@ -1258,14 +1302,23 @@
       return;
     }
 
-    // 그날 목록 페이지 이동(‹ 이전 / 다음 ›) — 달력은 그대로 두고 목록만 갱신
-    const dayPageButton = event.target.closest("[data-day-page-step]");
+    // 그날 목록 페이지 이동(‹ 이전 / 번호 / 다음 ›) — 달력은 그대로 두고 목록만 갱신
+    const dayPageButton = event.target.closest("[data-day-page-goto]");
     if (dayPageButton) {
-      dayPanelPage += Number(dayPageButton.dataset.dayPageStep);
+      const targetPage = Number(dayPageButton.dataset.dayPageGoto);
+      if (!Number.isFinite(targetPage)) {
+        return;
+      }
+      // 범위 밖 값은 dayPanelMarkup의 clampDayPanelPage가 잡아 준다.
+      dayPanelPage = targetPage;
       renderDayPanelOnly();
-      // 교체된 노드에서 같은 방향 버튼에 포커스를 되돌려 연속 조작이 끊기지 않게 한다.
-      const sameButton = scheduleResults.querySelector(`[data-day-page-step="${dayPageButton.dataset.dayPageStep}"]`);
-      (sameButton && !sameButton.disabled ? sameButton : scheduleResults.querySelector("[data-day-page-step]"))?.focus();
+      // 교체된 노드에서 같은 버튼(방향 버튼은 방향, 번호 버튼은 이동한 페이지)에 포커스를 되돌린다.
+      const direction = dayPageButton.dataset.dayPageDir;
+      const selector = direction
+        ? `[data-day-page-dir="${direction}"]`
+        : `[data-day-page-goto="${dayPanelPage}"]`;
+      const sameButton = scheduleResults.querySelector(selector);
+      (sameButton && !sameButton.disabled ? sameButton : scheduleResults.querySelector("[data-day-page-goto]"))?.focus();
       return;
     }
 

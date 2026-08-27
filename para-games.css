@@ -2402,9 +2402,48 @@
   cursor: not-allowed;
 }
 
-.games-day-pager-status {
-  color: #45505f;
-  font-size: 14px;
+/* 가운데 페이지 번호 버튼 묶음 */
+.games-day-pager-nums {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.games-day-pager-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 8px;
+  border: 1px solid #c9d2de;
+  border-radius: 10px;
+  background: #fff;
+  color: #14306b;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.games-day-pager-num:hover:not(.is-current) {
+  border-color: #003ec7;
+  background: #f2f5ff;
+}
+
+/* 현재 페이지는 색으로만이 아니라 굵기까지 달리해 눈에 띄게 한다. */
+.games-day-pager-num.is-current {
+  border-color: #003ec7;
+  background: #003ec7;
+  color: #fff;
+  cursor: default;
+}
+
+.games-day-pager-gap {
+  min-width: 20px;
+  color: #98a1b0;
+  font-size: 15px;
   font-weight: 700;
   text-align: center;
 }
@@ -2599,8 +2638,14 @@
     padding: 0 12px;
   }
 
-  .games-day-pager-status {
+  /* 번호가 많아도 잘리지 않게 줄바꿈하고, 손가락 터치 크기(44px)를 지킨다. */
+  .games-day-pager-nums {
     order: -1;
     flex-basis: 100%;
+  }
+
+  .games-day-pager-num {
+    min-width: 44px;
+    min-height: 44px;
   }
 }
