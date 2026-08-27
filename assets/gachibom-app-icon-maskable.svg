@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">가치봄 제주</title>
+  <desc id="desc">제주의 해와 무장애 여행길을 표현한 가치봄 제주 앱 아이콘</desc>
+  <defs>
+    <linearGradient id="bg" x1="64" y1="40" x2="448" y2="472" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0d59df"/>
+      <stop offset="1" stop-color="#001452"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <circle cx="345" cy="165" r="48" fill="#fdd400"/>
+  <path d="M102 317c51-60 104-85 157-75 40 8 67 47 101 47 19 0 36-8 50-24v89H102Z" fill="#fff" opacity=".97"/>
+  <path d="M115 332c56-52 104-70 143-55 39 14 64 48 99 48 18 0 34-6 47-18" fill="none" stroke="#f58220" stroke-width="23" stroke-linecap="round"/>
+  <path d="M169 375h170" fill="none" stroke="#003ec7" stroke-width="17" stroke-linecap="round"/>
+  <circle cx="161" cy="332" r="14" fill="#fff"/>
+  <circle cx="346" cy="325" r="14" fill="#fff"/>
+</svg>

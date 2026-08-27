@@ -1,0 +1,152 @@
+:root {
+  color-scheme: light;
+  font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background: #f4f7fb;
+  color: #122033;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(0, 62, 199, 0.14), transparent 30rem),
+    linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
+}
+
+a { color: inherit; }
+
+.distribution-shell {
+  width: min(760px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 56px;
+}
+
+.distribution-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.distribution-brand {
+  color: #003ec7;
+  font-size: 1.05rem;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.distribution-back {
+  border: 1px solid #ccd7e7;
+  border-radius: 999px;
+  padding: 10px 15px;
+  background: #fff;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.distribution-hero,
+.distribution-card {
+  border: 1px solid #dce5f1;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 16px 46px rgba(21, 43, 78, 0.08);
+}
+
+.distribution-hero { padding: clamp(24px, 6vw, 44px); }
+.distribution-card { margin-top: 16px; padding: 24px; }
+
+.distribution-kicker {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: #eaf1ff;
+  color: #003ec7;
+  font-size: 0.85rem;
+  font-weight: 850;
+}
+
+h1, h2 { margin: 0; line-height: 1.2; letter-spacing: -0.035em; }
+h1 { margin-top: 16px; font-size: clamp(2rem, 8vw, 3.25rem); }
+h2 { font-size: 1.35rem; }
+p, li { line-height: 1.75; color: #43536a; }
+
+.distribution-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.distribution-button {
+  display: inline-flex;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #003ec7;
+  border-radius: 14px;
+  padding: 12px 16px;
+  background: #003ec7;
+  color: #fff;
+  font-weight: 850;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.distribution-button[hidden] { display: none; }
+.distribution-button.secondary { background: #fff; color: #003ec7; }
+.distribution-install-status { margin: 14px 0 0; font-size: 0.9rem; }
+.distribution-qr-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+  align-items: center;
+  gap: 24px;
+}
+.distribution-qr-copy h2 { margin-top: 14px; }
+.distribution-qr-copy p { margin-bottom: 14px; }
+.distribution-address {
+  display: inline-flex;
+  max-width: 100%;
+  color: #003ec7;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  text-underline-offset: 4px;
+}
+.distribution-qr-hint {
+  margin: 8px 0 0 !important;
+  color: #5a687b;
+  font-size: 0.85rem;
+}
+.distribution-qr-link {
+  display: block;
+  border: 1px solid #cdd9ea;
+  border-radius: 20px;
+  padding: 16px;
+  background: #fff;
+}
+.distribution-qr-link img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+.distribution-steps { margin: 14px 0 0; padding-left: 22px; }
+.distribution-note { margin-bottom: 0; font-size: 0.9rem; }
+.distribution-footer { margin: 22px 0 0; text-align: center; font-size: 0.9rem; }
+.distribution-footer a { color: #40516a; text-underline-offset: 4px; }
+.distribution-meta { display: grid; gap: 8px; margin: 16px 0 0; }
+.distribution-meta div { padding: 14px; border-radius: 14px; background: #f4f7fb; }
+.distribution-meta dt { color: #66758a; font-size: 0.8rem; font-weight: 750; }
+.distribution-meta dd { margin: 5px 0 0; font-weight: 750; line-height: 1.55; }
+
+@media (max-width: 560px) {
+  .distribution-shell { width: min(100% - 22px, 760px); padding-top: 18px; }
+  .distribution-actions { grid-template-columns: 1fr; }
+  .distribution-qr-card { grid-template-columns: 1fr; }
+  .distribution-qr-link { width: min(280px, 100%); margin: 0 auto; }
+  .distribution-card { padding: 20px; border-radius: 20px; }
+}

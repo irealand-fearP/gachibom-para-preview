@@ -1,0 +1,53 @@
+{
+  "id": "./",
+  "name": "가치봄 제주 접근성 여행",
+  "short_name": "가치봄 제주",
+  "description": "모두를 위한 제주 접근성 여행 코스 추천",
+  "lang": "ko-KR",
+  "dir": "ltr",
+  "start_url": "./?source=pwa&intro=0",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f7f8fb",
+  "theme_color": "#003ec7",
+  "categories": ["travel", "navigation", "accessibility"],
+  "icons": [
+    {
+      "src": "assets/gachibom-app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/gachibom-app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/gachibom-app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/gachibom-app-icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "테마 선택",
+      "short_name": "테마",
+      "url": "./?source=pwa&intro=0#conceptPage"
+    },
+    {
+      "name": "추천 결과",
+      "short_name": "추천",
+      "url": "./?source=pwa&intro=0#recommendations"
+    }
+  ]
+}

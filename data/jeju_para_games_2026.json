@@ -1,0 +1,365 @@
+{
+  "updated_at": "2026-08-27",
+  "event": {
+    "name": "제46회 전국장애인체육대회",
+    "short_name": "2026 제주 장애인체전",
+    "slogan": "빛나는 제주에서 함께 뛰는 대한민국!",
+    "start_date": "2026-09-11",
+    "end_date": "2026-09-16",
+    "sports_count": 31,
+    "venue_count_label": "40개 경기장 항목",
+    "participants_label": "약 10,000명",
+    "athletes_label": "선수 약 7,000명",
+    "staff_label": "임원·관계자 약 3,000명",
+    "disability_types": ["지체장애", "시각장애", "지적·발달장애", "청각장애", "뇌병변장애"],
+    "host": "대한장애인체육회",
+    "organizers": "제주특별자치도·제주특별자치도교육청·제주특별자치도장애인체육회",
+    "guide_status": "2026년 6월 10일 1차 수정 참가요강의 계획안 기준이며 변경 시 별도 공지가 우선합니다.",
+    "source_title": "종목별 참가요강 1차 수정",
+    "source_url": "https://swimming.koreanpc.kr/org/swimming/notice/24379"
+  },
+  "ceremonies": [
+    {
+      "name": "개회식",
+      "date": "2026-09-11",
+      "time": "19:00",
+      "venue": "제주월드컵경기장",
+      "venue_id": "jeju-world-cup-stadium",
+      "status": "guide_confirmed"
+    },
+    {
+      "name": "폐회식",
+      "date": "2026-09-16",
+      "time": "15:30",
+      "venue": "장소 최종 공지 확인",
+      "status": "verify",
+      "note": "참가요강 안에 제주국제컨벤션센터 제2센터와 서귀포시종합체육관으로 장소가 다르게 표기되어 있습니다. 최종 운영 공지를 확인하세요."
+    }
+  ],
+  "contacts": [
+    {
+      "category": "이동 지원",
+      "title": "제주 교통약자 이동지원센터",
+      "hours": "365일 24시간",
+      "detail": "이용 대상과 사전 등록 여부를 확인한 뒤 배차를 요청하세요.",
+      "actions": [
+        {"label": "전화 1899-6884", "kind": "tel", "value": "1899-6884"},
+        {"label": "문자 010-2300-6884", "kind": "sms", "value": "010-2300-6884"}
+      ],
+      "source_title": "제주 교통약자 이동지원센터",
+      "source_url": "https://www.jejuhappycall.com/"
+    },
+    {
+      "category": "제주 생활 안내",
+      "title": "제주 120 만덕콜센터",
+      "hours": "매일 07:00~22:00",
+      "detail": "교통·관광·행사·장애인복지 등 제주 생활 정보를 문의할 수 있습니다.",
+      "actions": [
+        {"label": "전화 120", "kind": "tel", "value": "120"}
+      ],
+      "source_title": "제주특별자치도 120 안내",
+      "source_url": "https://www.jeju.go.kr/move/guide/minwon.htm"
+    },
+    {
+      "category": "긴급 신고",
+      "title": "119 구급·소방",
+      "hours": "긴급 상황 전용",
+      "detail": "주소, 환자 상태, 의식과 호흡 여부를 알리고 휴대전화 위치 기능을 켜세요. 전화가 어려우면 문자 신고가 가능합니다.",
+      "actions": [
+        {"label": "전화 119", "kind": "tel", "value": "119"},
+        {"label": "문자 119", "kind": "sms", "value": "119"}
+      ],
+      "source_title": "소방청 119 신고 안내",
+      "source_url": "https://nfa.go.kr/nfa/safetyinfo/emergencyservice/119emergencydeclaration/",
+      "priority": "emergency"
+    },
+    {
+      "category": "긴급 신고",
+      "title": "112 경찰",
+      "hours": "범죄·위험 상황 전용",
+      "detail": "전화 통화가 어려운 상황에서는 문자로 위치와 상황을 보내세요.",
+      "actions": [
+        {"label": "전화 112", "kind": "tel", "value": "112"},
+        {"label": "문자 112", "kind": "sms", "value": "112"}
+      ],
+      "source_title": "경찰청 112 문자 신고 안내",
+      "source_url": "https://www.police.go.kr/user/bbs/BD_selectBbs.do?q_bbsCode=1007&q_bbscttSn=20250613093203002",
+      "priority": "emergency"
+    }
+  ],
+  "notices": [
+    {
+      "title": "종목별 경기단체 공지를 함께 확인하세요",
+      "detail": "전체 일정은 참가요강의 계획안입니다. 종목별 경기단체 공지와 현장 운영 안내가 더 최신이면 해당 공지를 우선해 주세요.",
+      "source_title": "대한장애인육상연맹 일정 정정 안내",
+      "source_url": "https://kafd.koreanpc.kr/org/kafd/notice/25972"
+    }
+  ],
+  "sports": [
+    {
+      "name": "게이트볼",
+      "events": [
+        {"division": "전종별", "disability": "전종별", "venue": "서귀포시 전천후 게이트볼장", "start_date": "2026-09-12", "end_date": "2026-09-14", "schedule_label": "9월 12일~14일", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "골볼",
+      "events": [
+        {"division": "시각", "disability": "시각장애", "venue": "성산국민체육센터체육관", "start_date": "2026-09-11", "end_date": "2026-09-16", "schedule_label": "9월 11일~16일", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "골프",
+      "events": [
+        {"division": "파크", "disability": "지체·지적·뇌병변", "venue": "상도리파크골프장", "start_date": "2026-09-11", "end_date": "2026-09-15", "schedule_label": "9월 11일~15일", "location_scope": "jeju"},
+        {"division": "필드", "disability": "지체·뇌병변", "venue": "크라운CC", "start_date": "2026-09-14", "end_date": "2026-09-16", "schedule_label": "9월 14일~16일", "location_scope": "jeju"},
+        {"division": "스크린", "disability": "지체·뇌병변", "venue": "골프존파크 화북VIP스크린", "start_date": "2026-09-11", "end_date": "2026-09-12", "schedule_label": "9월 11일~12일", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "농구",
+      "events": [
+        {"division": "지적·지체", "disability": "지적·지체", "venue": "한라체육관", "start_date": "2026-08-31", "end_date": "2026-09-06", "schedule_label": "8월 31일~9월 6일", "location_scope": "jeju", "detail_venue_id": "halla-gymnasium"}
+      ]
+    },
+    {
+      "name": "당구",
+      "events": [
+        {"division": "전종별", "disability": "전종별", "venue": "공천포 전지훈련센터 다목적체육관", "start_date": "2026-09-11", "end_date": "2026-09-14", "schedule_label": "9월 11일~14일", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "댄스스포츠",
+      "events": [
+        {"division": "지체·시각·청각·뇌병변", "disability": "지체·시각·청각·뇌병변", "venue": "제주대학교 체육관", "start_date": "2026-09-11", "end_date": "2026-09-13", "schedule_label": "9월 11일~13일", "preparation": "9월 10일 공식연습", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "휠체어럭비",
+      "events": [
+        {"division": "지체", "disability": "지체장애", "venue": "구좌체육관", "start_date": "2026-09-08", "end_date": "2026-09-16", "schedule_label": "9월 8일 이전 시작~16일", "preparation": "참가요강은 9월 8일 이전 구간부터 경기를 표기", "location_scope": "jeju", "date_precision": "before_or_on"}
+      ]
+    },
+    {
+      "name": "론볼",
+      "events": [
+        {"division": "지체·뇌병변", "disability": "지체·뇌병변", "venue": "한림종합경기장 론볼장", "start_date": "2026-09-11", "end_date": "2026-09-16", "schedule_label": "9월 11일~16일", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "배구",
+      "events": [
+        {"division": "지체", "disability": "지체장애", "venue": "애월근린체육공원 애월체육관", "start_date": "2026-09-12", "end_date": "2026-09-16", "schedule_label": "9월 12일~16일", "preparation": "9월 11일 공식연습", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "배드민턴",
+      "events": [
+        {"division": "지체·지적·청각", "disability": "지체·지적·청각", "venue": "제주복합체육관", "start_date": "2026-09-11", "end_date": "2026-09-16", "schedule_label": "9월 11일~16일", "preparation": "9월 10일 공식연습", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "보치아",
+      "events": [
+        {"division": "지체·뇌병변", "disability": "지체·뇌병변", "venue": "사라봉다목적체육관", "start_date": "2026-09-11", "end_date": "2026-09-16", "schedule_label": "9월 11일~16일", "preparation": "9월 10일 용기구 검사", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "볼링",
+      "events": [
+        {"division": "지체·시각", "disability": "지체·시각", "venue": "대현퍼펙트볼링클럽", "start_date": "2026-09-10", "end_date": "2026-09-16", "schedule_label": "9월 10일~16일", "preparation": "9월 9일 공식연습", "location_scope": "jeju"},
+        {"division": "뇌병변·청각·지적", "disability": "뇌병변·청각·지적", "venue": "33락볼링장", "start_date": "2026-09-10", "end_date": "2026-09-16", "schedule_label": "9월 10일~16일", "preparation": "9월 9일 공식연습", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "사격",
+      "events": [
+        {"division": "지체·청각", "disability": "지체·청각", "venue": "창원국제사격장", "start_date": "2026-08-16", "end_date": "2026-08-20", "schedule_label": "8월 16일~20일", "location_scope": "off_island", "scope_label": "경남 창원"}
+      ]
+    },
+    {
+      "name": "사이클",
+      "events": [
+        {"division": "트랙", "disability": "전종별", "venue": "창원레포츠파크", "start_date": "2026-08-25", "end_date": "2026-08-26", "schedule_label": "8월 25일~26일", "location_scope": "off_island", "scope_label": "경남 창원"},
+        {"division": "도로", "disability": "전종별", "venue": "정석비행장 일원", "start_date": "2026-09-12", "end_date": "2026-09-16", "schedule_label": "9월 12일~16일", "preparation": "9월 10일·11일 공식연습", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "쇼다운",
+      "events": [
+        {"division": "시각", "disability": "시각장애", "venue": "동아마라톤센터", "start_date": "2026-09-12", "end_date": "2026-09-14", "schedule_label": "9월 12일~14일", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "수영",
+      "events": [
+        {"division": "전종별", "disability": "전종별", "venue": "제주종합경기장 실내수영장", "start_date": "2026-09-11", "end_date": "2026-09-16", "schedule_label": "9월 11일~16일", "preparation": "9월 10일 공식연습", "location_scope": "jeju", "detail_venue_id": "jeju-sports-pool"}
+      ]
+    },
+    {
+      "name": "슐런",
+      "events": [
+        {"division": "지체·지적·청각", "disability": "지체·지적·청각", "venue": "남원생활체육관", "start_date": "2026-09-13", "end_date": "2026-09-15", "schedule_label": "9월 13일~15일", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "승마",
+      "events": [
+        {"division": "지체·시각·뇌병변", "disability": "지체·시각·뇌병변", "venue": "제주한라대학교 말산업 실습목장", "start_date": "2026-09-12", "end_date": "2026-09-13", "schedule_label": "9월 12일~13일", "preparation": "9월 11일 마체검사", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "양궁",
+      "events": [
+        {"division": "전종별", "disability": "전종별", "venue": "제주종합운동장", "start_date": "2026-09-13", "end_date": "2026-09-16", "schedule_label": "9월 13일~16일", "preparation": "9월 12일 공식연습", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "역도",
+      "events": [
+        {"division": "전종별", "disability": "전종별", "venue": "한림체육관", "start_date": "2026-09-10", "end_date": "2026-09-16", "schedule_label": "9월 10일~16일", "preparation": "9월 9일 공식연습", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "요트",
+      "events": [
+        {"division": "지체", "disability": "지체장애", "venue": "도두항", "start_date": "2026-09-12", "end_date": "2026-09-16", "schedule_label": "9월 12일~16일", "preparation": "9월 11일 등록·계측", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "유도",
+      "events": [
+        {"division": "시각·청각", "disability": "시각·청각", "venue": "제주특별자치도유도회관", "start_date": "2026-09-11", "end_date": "2026-09-13", "schedule_label": "9월 11일~13일", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "육상",
+      "events": [
+        {"division": "트랙·필드", "disability": "전종별", "venue": "강창학종합경기장", "start_date": "2026-09-11", "end_date": "2026-09-16", "schedule_label": "9월 11일~16일", "location_scope": "jeju"},
+        {"division": "마라톤", "disability": "전종별", "venue": "남원해안도로 일원", "start_date": "2026-09-16", "end_date": "2026-09-16", "schedule_label": "9월 16일", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "조정",
+      "events": [
+        {"division": "지체·시각·지적", "disability": "지체·시각·지적", "venue": "충주탄금호 조정경기장", "start_date": "2026-09-12", "end_date": "2026-09-14", "schedule_label": "9월 12일~14일", "preparation": "9월 11일 공식연습", "location_scope": "off_island", "scope_label": "충북 충주"}
+      ]
+    },
+    {
+      "name": "축구",
+      "events": [
+        {"division": "청각", "disability": "청각장애", "venue": "걸매축구장 A", "start_date": "2026-09-12", "end_date": "2026-09-16", "schedule_label": "9월 12일~16일", "location_scope": "jeju"},
+        {"division": "지적", "disability": "지적장애", "venue": "서귀포시민축구장(천연)", "start_date": "2026-09-12", "end_date": "2026-09-16", "schedule_label": "9월 12일~16일", "location_scope": "jeju"},
+        {"division": "뇌병변", "disability": "뇌병변장애", "venue": "서귀포축구공원(효돈) C", "start_date": "2026-09-13", "end_date": "2026-09-16", "schedule_label": "9월 13일~16일", "location_scope": "jeju"},
+        {"division": "시각(약시·전맹)", "disability": "시각장애", "venue": "서귀포축구공원(효돈) A·B", "start_date": "2026-09-13", "end_date": "2026-09-16", "schedule_label": "약시 9월 14일~16일 · 전맹 9월 13일~15일", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "카누",
+      "events": [
+        {"division": "지체", "disability": "지체장애", "venue": "서귀포시 성산읍 오조리 일원", "start_date": "2026-09-12", "end_date": "2026-09-13", "schedule_label": "9월 12일~13일", "preparation": "9월 11일 공식연습", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "탁구",
+      "events": [
+        {"division": "지체·지적·청각·뇌병변", "disability": "지체·지적·청각·뇌병변", "venue": "한라체육관", "start_date": "2026-09-11", "end_date": "2026-09-16", "schedule_label": "9월 11일~16일", "preparation": "9월 10일 공식연습", "location_scope": "jeju", "detail_venue_id": "halla-gymnasium"},
+        {"division": "시각", "disability": "시각장애", "venue": "혼디누림터", "start_date": "2026-09-13", "end_date": "2026-09-15", "schedule_label": "9월 13일~15일", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "태권도",
+      "events": [
+        {"division": "지체·청각", "disability": "지체·청각", "venue": "표선생활체육관", "start_date": "2026-09-12", "end_date": "2026-09-14", "schedule_label": "9월 12일~14일", "preparation": "9월 11일 공식연습", "location_scope": "jeju", "detail_venue_id": "pyoseon-gymnasium"}
+      ]
+    },
+    {
+      "name": "휠체어테니스",
+      "events": [
+        {"division": "지체", "disability": "지체장애", "venue": "공천포테니스장", "start_date": "2026-09-09", "end_date": "2026-09-16", "schedule_label": "9월 9일~16일", "preparation": "9월 8일 이전 공식연습", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "트라이애슬론",
+      "events": [
+        {"division": "지체·시각", "disability": "지체·시각", "venue": "김녕해수욕장 일원", "start_date": "2026-09-13", "end_date": "2026-09-13", "schedule_label": "9월 13일", "preparation": "9월 12일 공식연습", "location_scope": "jeju"}
+      ]
+    },
+    {
+      "name": "휠체어펜싱",
+      "events": [
+        {"division": "지체·뇌병변", "disability": "지체·뇌병변", "venue": "대정문화체육센터", "start_date": "2026-09-11", "end_date": "2026-09-16", "schedule_label": "9월 11일~16일", "preparation": "9월 9일·10일 공식연습", "location_scope": "jeju"}
+      ]
+    }
+  ],
+  "venues": [
+    {
+      "id": "halla-gymnasium",
+      "name": "한라체육관",
+      "area": "제주시",
+      "address": "제주특별자치도 제주시 서광로2길 24",
+      "latitude": 33.4974191,
+      "longitude": 126.5154515,
+      "program": "농구·탁구",
+      "phase": "사전·본경기",
+      "start_date": "2026-08-31",
+      "end_date": "2026-09-16",
+      "schedule_label": "농구 8월 31일~9월 6일 · 탁구 9월 11일~16일",
+      "source_title": "한국휠체어농구연맹 경기 일정",
+      "source_url": "https://kwbf.koreanpc.kr/org/kwbf/boards/notice/posts/25909",
+      "accessibility_status": "field_check_required",
+      "accessibility_note": "출입구·승하차·관람석 세부 정보는 대회 운영 자료와 현장 확인 후 반영합니다."
+    },
+    {
+      "id": "jeju-sports-pool",
+      "name": "제주종합경기장 실내수영장",
+      "area": "제주시",
+      "address": "제주특별자치도 제주시 서광로2길 24",
+      "latitude": 33.4968115,
+      "longitude": 126.516743,
+      "program": "수영",
+      "phase": "본경기",
+      "start_date": "2026-09-11",
+      "end_date": "2026-09-16",
+      "schedule_label": "9월 11일~16일",
+      "source_title": "대한장애인수영연맹 경기 일정",
+      "source_url": "https://swimming.koreanpc.kr/org/swimming/notice/25995",
+      "accessibility_status": "field_check_required",
+      "accessibility_note": "출입구·승하차·관람석 세부 정보는 대회 운영 자료와 현장 확인 후 반영합니다."
+    },
+    {
+      "id": "pyoseon-gymnasium",
+      "name": "표선생활체육관",
+      "area": "서귀포시",
+      "address": "제주특별자치도 서귀포시 표선면 한마음초등로 399",
+      "latitude": 33.3542985,
+      "longitude": 126.8144314,
+      "program": "태권도",
+      "phase": "본경기",
+      "start_date": "2026-09-12",
+      "end_date": "2026-09-14",
+      "schedule_label": "9월 12일~14일",
+      "source_title": "대한장애인태권도협회 경기 일정",
+      "source_url": "https://kpta.koreanpc.kr/org/kpta/notice/25945",
+      "accessibility_status": "field_check_required",
+      "accessibility_note": "출입구·승하차·관람석 세부 정보는 대회 운영 자료와 현장 확인 후 반영합니다."
+    },
+    {
+      "id": "jeju-world-cup-stadium",
+      "name": "제주월드컵경기장",
+      "area": "서귀포시",
+      "address": "제주특별자치도 서귀포시 월드컵로 33",
+      "latitude": 33.2462695,
+      "longitude": 126.5091071,
+      "program": "개회식",
+      "phase": "공식행사",
+      "start_date": "2026-09-11",
+      "end_date": "2026-09-11",
+      "schedule_label": "9월 11일 19:00",
+      "source_title": "종목별 참가요강 1차 수정",
+      "source_url": "https://swimming.koreanpc.kr/org/swimming/notice/24379",
+      "accessibility_status": "field_check_required",
+      "accessibility_note": "출입구·승하차·관람석 세부 정보는 대회 운영 자료와 현장 확인 후 반영합니다."
+    }
+  ]
+}
